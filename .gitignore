@@ -1,0 +1,33 @@
+# === Secrets & config sensibles ===
+.env
+.env.secrets
+alertmanager/alertmanager.yml
+traefik/secrets/traefik_auth.htpasswd
+
+# === Données persistantes ===
+grafana-data/
+prometheus-data/
+alertmanager-data/
+
+# === Fichiers temporaires ou inutiles ===
+*.pyc
+__pycache__/
+*.log
+*.bak
+*.tmp
+*.swp
+
+# === Traefik (certificats ACME générés) ===
+
+traefik/acme/acme.json
+
+# === Sauvegardes ===
+Save/
+backup/
+
+# === Useless === 
+<<<<<<< HEAD
+ORGA.md
+=======
+ORGA.md
+>>>>>>> 782708c (🔥 Cleanup: remove secrets/data from Git tracking)

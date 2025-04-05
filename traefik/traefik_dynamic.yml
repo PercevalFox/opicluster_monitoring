@@ -1,0 +1,16 @@
+http:
+  routers:
+    traefik-dashboard:
+      rule: Host(`traefik.monitoring.opicluster.online`)
+      entryPoints:
+        - websecure
+      service: api@internal
+      middlewares:
+        - traefik-auth
+      tls:
+        certResolver: myresolver
+
+  middlewares:
+    traefik-auth:
+      basicAuth:
+        usersFile: "/secrets/traefik_auth.htpasswd"

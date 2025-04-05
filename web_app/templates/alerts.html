@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Alerts - Opicluster Monitoring</title>
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Code&display=swap" rel="stylesheet">
+  <style>
+    body { background: #121212; color: #e0e0e0; font-family: 'Fira Code', monospace; padding: 20px; }
+    h1, h2 { text-align: center; color: #82aaff; }
+    .alert { border: 1px solid #333; border-radius: 8px; padding: 15px; margin: 10px 0; }
+    .alert h3 { margin: 0 0 10px; }
+    .alert p { margin: 5px 0; }
+    .up { color: #1abc9c; }
+    .down { color: #e74c3c; }
+    a { color: #82aaff; text-decoration: none; }
+    table { border-collapse: collapse; width: 100%; margin-top: 30px; }
+    th, td { border: 1px solid #333; padding: 8px; text-align: center; }
+    th { background: #1f1f2e; color: #82aaff; }
+    button { background: #82aaff; color: #121212; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer; }
+    button:hover { background: #5c8bd9; }
+  </style>
+</head>
+<body>
+  <h1>Alertes Actives</h1>
+  {% if alerts %}
+    {% for alert in alerts %}
+      <div class="alert">
+        <h3>{{ alert.labels.alertname }}</h3>
+        <p><strong>Instance:</strong> {{ alert.labels.instance }}</p>
+        <p><strong>Summary:</strong> {{ alert.annotations.summary }}</p>
+        <p><strong>Description:</strong> {{ alert.annotations.description }}</p>
+        <p><strong>Status:</strong> {{ alert.status }}</p>
+        <p><strong>Starts at:</strong> {{ alert.startsAt }}</p>
+      </div>
+    {% endfor %}
+  {% else %}
+    <p style="text-align:center;">Aucune alerte active.</p>
+  {% endif %}
+  
+  <h2>Test d'Alertes</h2>
+  <table>
+    <tr>
+      <th>Alerte</th>
+      <th>Description de test</th>
+      <th>Envoyer SMS</th>
+    </tr>
+    <!-- Exemple de test pour l'alerte NodeDown -->
+    <tr>
+      <td>NodeDown</td>
+      <td>L'OPI est KO (Test)</td>
+      <td><button onclick="sendTestAlert('NodeDown', 'KO')">Test SMS</button></td>
+    </tr>
+    <!-- Test pour HighTemperature -->
+    <tr>
+      <td>HighTemperature</td>
+      <td>Température > 70°C (Test)</td>
+      <td><button onclick="sendTestAlert('HighTemperature', 'Température élevée')">Test SMS</button></td>
+    </tr>
+    <!-- Test pour HighCpuUsage -->
+    <tr>
+      <td>HighCpuUsage</td>
+      <td>Utilisation CPU > 90% (Test)</td>
+      <td><button onclick="sendTestAlert('HighCpuUsage', 'CPU élevée')">Test SMS</button></td>
+    </tr>
+    <!-- Test pour HighMemoryUsage -->
+    <tr>
+      <td>HighMemoryUsage</td>
+      <td>Utilisation mémoire > 90% (Test)</td>
+      <td><button onclick="sendTestAlert('HighMemoryUsage', 'Mémoire élevée')">Test SMS</button></td>
+    </tr>
+    <!-- Test pour LowDiskSpace -->
+    <tr>
+      <td>LowDiskSpace</td>
+      <td>Espace disque < 10% (Test)</td>
+      <td><button onclick="sendTestAlert('LowDiskSpace', 'Espace disque faible')">Test SMS</button></td>
+    </tr>
+    <!-- Test pour HighSwapUsage -->
+    <tr>
+      <td>HighSwapUsage</td>
+      <td>Swap > 50% (Test)</td>
+      <td><button onclick="sendTestAlert('HighSwapUsage', 'Swap élevé')">Test SMS</button></td>
+    </tr>
+    <!-- Test pour NetworkIssue -->
+    <tr>
+      <td>NetworkIssue</td>
+      <td>Problème réseau (Test)</td>
+      <td><button onclick="sendTestAlert('NetworkIssue', 'Problème réseau')">Test SMS</button></td>
+    </tr>
+  </table>
+  
+  <p style="text-align:center;"><a href="/">Retour au Dashboard</a></p>
+  
+  <script>
+    function sendTestAlert(alertname, summary, method = 'sms') {
+      // Prépare un payload test pour l'alerte
+      const payload = {
+        alerts: [
+          {
+            labels: { instance: "192.168.1.19", alertname: alertname },
+            annotations: { summary: summary, description: summary + " (test)" },
+            status: method === 'sms' ? "firing" : "resolved"
+          }
+        ]
+      };
+      
+      const endpoint = method === 'sms' ? '/sms_alert' : '/mail_alert';
+      
+      fetch(endpoint, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      })
+      .then(response => response.json())
+      .then(data => {
+        alert("Test " + method.toUpperCase() + " envoyé: " + data.status);
+      })
+      .catch(error => {
+        alert("Erreur lors de l'envoi du test " + method.toUpperCase() + ": " + error);
+      });
+    }
+  </script>
+</body>
+</html>

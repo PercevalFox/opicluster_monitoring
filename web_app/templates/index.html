@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Opicluster Monitoring - DevSecOps</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}" type="image/x-icon">
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Code&display=swap" rel="stylesheet">
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css" integrity="sha512-..." crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <style>
+    * { box-sizing: border-box; }
+    body { margin: 0; padding: 0; background: #121212; color: #e0e0e0; font-family: 'Fira Code', monospace; }
+    header { background: linear-gradient(90deg, #1a1a2e, #16213e); padding: 20px; text-align: center; box-shadow: 0 4px 8px rgba(0,0,0,0.5); }
+    header h1 { margin: 0; font-size: 2.8em; color: #82aaff; }
+    header p { margin: 5px 0 0; font-size: 1.2em; color: #c0c0c0; }
+    nav { text-align: center; padding: 10px 0; background: #1f1f2e; }
+    nav a { color: #82aaff; text-decoration: none; margin: 0 15px; font-size: 1.1em; transition: color 0.3s; }
+    nav a:hover { color: #5c8bd9; }
+    .container { max-width: 1200px; margin: 20px auto; padding: 0 20px; }
+    .global-cards, .node-grid { display: grid; gap: 20px; }
+    .global-cards { grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); margin-bottom: 40px; }
+    .card, .node-card {
+      background: #1e1e2f; padding: 20px; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.4); transition: transform 0.2s;
+    }
+    .card:hover, .node-card:hover { transform: translateY(-5px); }
+    .card h2, .node-card h3 { margin-top: 0; color: #82aaff; text-align: center; }
+    .card p, .node-card p { margin: 10px 0; font-size: 1.1em; text-align: center; }
+    .status { font-size: 1.2em; margin-bottom: 8px; }
+    .status.up { color: #1abc9c; }
+    .status.down { color: #e74c3c; }
+    .consumption-table { width: 100%; border-collapse: collapse; margin-top: 30px; }
+    .consumption-table th, .consumption-table td { padding: 10px; text-align: center; border: 1px solid #333; }
+    .consumption-table th { background: #1f1f2e; color: #82aaff; }
+    footer { text-align: center; margin-top: 40px; padding: 20px 0; background: #1a1a2e; color: #888; font-size: 0.9em; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Opicluster Monitoring</h1>
+    <p>DevSecOps | k3s | Orange Pi Cluster</p>
+  </header>
+  <nav>
+    <a href="/">Dashboard</a>
+    <a href="/alerts">Alerts</a>
+    <a href="/settings">Settings</a>
+    <a href="https://webmail.amen.fr/appsuite/#!!&app=io.ox/mail&folder=default0/INBOX" target="_blank">Webmail</a>
+    <a href="https://prometheus.monitoring.opicluster.online/" target="_blank">Prometheus</a>
+    <a href="https://alertmanager.monitoring.opicluster.online/" target="_blank">Alertmanager</a>
+    <a href="https://grafana.monitoring.opicluster.online/" target="_blank">Grafana</a>
+    <a href="https://traefik.monitoring.opicluster.online/" target="_blank">Traefik</a>
+  </nav>
+  <div class="container">
+    <!-- Statistiques Globales -->
+    <div class="global-cards">
+      <div class="card">
+        <h2 style="text-align:center;">Total CPU Cores</h2>
+        <p style="text-align:center;" class="info">Nombre de Cores</p>
+        <p style="text-align:center;" class="stat">{{ total_cpu_cores }}</p>
+      </div>
+      <div class="card">
+        <h2 style="text-align:center;">% RAM utilisé</h2>
+        <p style="text-align:center;" class="info">% de Ram</p>
+        <p style="text-align:center;" class="stat">~ 19 %</p>
+      </div>
+      <div class="card">
+        <h2 style="text-align:center;">Consommation Electrique (€/jour)</h2>
+        <p style="text-align:center;" class="info">Estimation</p>
+        <p style="text-align:center;" class="stat">0.24 €/jour</p>
+      </div>
+    </div>
+    <!-- Consommation détaillée -->
+    <h2 style="color:#82aaff; text-align:center;">Consommation Électrique & Coûts</h2>
+    <p style="text-align:center;">Total puissance consommée: {{ total_power }} W</p>
+    <table class="consumption-table">
+      <tr>
+        <th>Période</th>
+        <th>Coût (€)</th>
+      </tr>
+      <tr>
+        <td>Par Minute</td>
+        <td>{{ (0.24 / 1440)|round(4) }} €</td>
+      </tr>
+      <tr>
+        <td>Par Heure</td>
+        <td>{{ (0.24 / 24)|round(2) }} €</td>
+      </tr>
+      <tr>
+        <td>Par Jour</td>
+        <td>{{ 0.24|round(2) }} €</td>
+      </tr>
+      <tr>
+        <td>Par Semaine</td>
+        <td>{{ (0.24 * 7)|round(2) }} €</td>
+      </tr>
+      <tr>
+        <td>Par Mois</td>
+        <td>{{ (0.2453 * 30)|round(2) }} €</td>
+      </tr>
+    </table>
+    <!-- Détails par Orange Pi -->
+    <h2 style="color:#82aaff; text-align:center; margin-top:40px;">Détail des Orange Pi</h2>
+    <div class="node-grid">
+      {% for node, data in metrics.items() %}
+      <div class="node-card">
+        <h3>{{ node }}</h3>
+        <p class="status {% if data.status %}up{% else %}down{% endif %}">
+          {% if data.status %}
+            <i class="fa-solid fa-circle-check"></i> UP
+          {% else %}
+            <i class="fa-solid fa-circle-xmark"></i> DOWN
+          {% endif %}
+        </p>
+        <p class="info"><strong>Température :</strong> {% if data.temperature %}{{ data.temperature }} °C{% else %}N/A{% endif %}</p>
+        <p class="info"><strong>Load 5m :</strong> {% if data.load %}{{ data.load }}{% else %}N/A{% endif %}</p>
+        <p class="info"><strong>Filesystem Avail :</strong> {% if data.filesystem %}{{ data.filesystem }}{% else %}N/A{% endif %}</p>
+        <p class="info"><strong>TCP Connexions :</strong> {% if data.tcp %}{{ data.tcp }}{% else %}N/A{% endif %}</p>
+        <p class="info"><strong>Coût (€/h) :</strong> {% if data.cost is not none %}{{ ((0.24 / 24) / 12 )|round(4) }} €/h{% else %}N/A{% endif %}</p>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+  <footer>
+    &copy; 2025 Opicluster - Monitoring by Uncle Web =D
+  </footer>
+</body>
+</html>

@@ -1,0 +1,91 @@
+version: '3.8'
+  
+services:
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: prometheus
+    volumes:
+      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+      - ./prometheus/alert.rules.yml:/etc/prometheus/alert.rules.yml
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+    networks:
+      - traefik_proxy
+    labels:
+      - "traefik.enable=true"
+      - "traefik.docker.network=traefik_proxy"
+      - "traefik.http.routers.prometheus.rule=Host(`prometheus.monitoring.opicluster.online`)"
+      - "traefik.http.routers.prometheus.entryPoints=websecure"
+      - "traefik.http.routers.prometheus.tls=true"
+      - "traefik.http.routers.prometheus.tls.certresolver=myresolver"
+      - "traefik.http.routers.prometheus.middlewares=traefik-auth@file"
+      - "traefik.http.services.prometheus.loadbalancer.server.port=9090"
+  
+  alertmanager:
+    image: prom/alertmanager:latest
+    container_name: alertmanager
+    volumes:
+      - ./alertmanager/alertmanager.yml:/etc/alertmanager/alertmanager.yml
+    networks:
+      - traefik_proxy
+    labels:
+      - "traefik.enable=true"
+      - "traefik.docker.network=traefik_proxy"
+      - "traefik.http.routers.alertmanager.rule=Host(`alertmanager.monitoring.opicluster.online`)"
+      - "traefik.http.routers.alertmanager.entryPoints=websecure"
+      - "traefik.http.routers.alertmanager.tls=true"
+      - "traefik.http.routers.alertmanager.tls.certresolver=myresolver"
+      - "traefik.http.routers.alertmanager.middlewares=traefik-auth@file"
+      - "traefik.http.services.alertmanager.loadbalancer.server.port=9093"
+  
+  grafana:
+    image: grafana/grafana:latest
+    container_name: grafana
+    env_file:
+      - .env.secrets
+    environment:
+      - GF_SECURITY_ADMIN_USER=${GRAFANA_ADMIN_USER}
+      - GF_SECURITY_ADMIN_PASSWORD=${GRAFANA_ADMIN_PASSWORD}
+    volumes:
+      - ./grafana-data:/var/lib/grafana
+    networks:
+      - traefik_proxy
+    labels:
+      - "traefik.enable=true"
+      - "traefik.docker.network=traefik_proxy"
+      - "traefik.http.routers.grafana.rule=Host(`grafana.monitoring.opicluster.online`)"
+      - "traefik.http.routers.grafana.entryPoints=websecure"
+      - "traefik.http.routers.grafana.tls=true"
+      - "traefik.http.routers.grafana.tls.certresolver=myresolver"
+      # Pas de middleware d'auth pour Grafana !
+      - "traefik.http.services.grafana.loadbalancer.server.port=3000"
+  
+  web_app:
+    build: ./web_app
+    container_name: web_app
+    env_file:
+      - .env.secrets
+    environment:
+      - FREE_USER=${FREE_USER}
+      - FREE_PASS=${FREE_PASS}
+    networks:
+      - traefik_proxy
+    labels:
+      - "traefik.enable=true"
+      - "traefik.docker.network=traefik_proxy"
+      # Route HTTP pour rediriger vers HTTPS
+      - "traefik.http.routers.web_app_http.rule=Host(`monitoring.opicluster.online`)"
+      - "traefik.http.routers.web_app_http.entryPoints=web"
+      - "traefik.http.routers.web_app_http.middlewares=redirect-to-https"
+      - "traefik.http.middlewares.redirect-to-https.redirectscheme.scheme=https"
+      # Route HTTPS avec ACME et auth
+      - "traefik.http.routers.web_app_https.rule=Host(`monitoring.opicluster.online`)"
+      - "traefik.http.routers.web_app_https.entryPoints=websecure"
+      - "traefik.http.routers.web_app_https.tls=true"
+      - "traefik.http.routers.web_app_https.tls.certresolver=myresolver"
+      - "traefik.http.routers.web_app_https.middlewares=traefik-auth@file"
+      - "traefik.http.services.web_app.loadbalancer.server.port=5000"
+
+networks:
+  traefik_proxy:
+    external: true

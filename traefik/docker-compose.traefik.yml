@@ -1,0 +1,32 @@
+version: '3.8'
+services:
+  traefik:
+    image: traefik:2.9
+    container_name: traefik
+    command:       
+      - "--api.dashboard=true"                  # Dashboard accessible via Traefik (non public par défaut)
+      - "--entryPoints.web.address=:80"
+      - "--entryPoints.websecure.address=:443"
+      - "--providers.docker=true"
+      - "--providers.file.filename=/traefik_dynamic.yml"
+      # ACME configuration
+      - "--certificatesResolvers.myresolver.acme.email=alerte@opicluster.online"
+      - "--certificatesResolvers.myresolver.acme.storage=/acme/acme.json"
+      - "--certificatesResolvers.myresolver.acme.tlsChallenge=true"
+      - "--log.level=INFO"
+    ports:
+      - "80:80"
+      - "443:443"
+      - "8080:8080"
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock:ro"
+      - "./acme:/acme"
+      - "./traefik_dynamic.yml:/traefik_dynamic.yml"
+      - "./secrets:/secrets:ro"
+
+    networks:
+      - traefik_proxy
+
+networks:
+  traefik_proxy:
+    external: true

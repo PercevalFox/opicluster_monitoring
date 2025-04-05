@@ -1,0 +1,51 @@
+global:
+  scrape_interval: 15s
+  evaluation_interval: 15s
+
+alerting:
+  alertmanagers:
+    - static_configs:
+        - targets: ["alertmanager:9093"]
+
+rule_files:
+  - alert.rules.yml
+
+scrape_configs:
+  - job_name: 'node'
+    static_configs:
+      - targets: ["192.168.1.19:9100"]
+        labels:
+          name: "OPIMASC1"
+      - targets: ["192.168.1.85:9100"]
+        labels:
+          name: "OPIMONC1"
+      - targets: ["192.168.1.114:9100"]
+        labels:
+          name: "OPIMONC2"
+      - targets: ["192.168.1.53:9100"]
+        labels:
+          name: "OPIMONI1"
+      - targets: ["192.168.1.196:9100"]
+        labels:
+          name: "OPISLAC1"  
+      - targets: ["192.168.1.133:9100"]
+        labels:
+          name: "OPISLAC2"
+      - targets: ["192.168.1.187:9100"]
+        labels:
+          name: "OPISLAC3"
+      - targets: ["192.168.1.64:9100"]
+        labels:
+          name: "OPISLAC4"
+      - targets: ["192.168.1.149:9100"]
+        labels:
+          name: "OPISLAC5"
+      - targets: ["192.168.1.195:9100"]
+        labels:
+          name: "OPISLAC6"   
+      - targets: ["192.168.1.36:9100"]
+        labels:
+          name: "OPISLAC7"
+      - targets: ["192.168.1.78:9100"]
+        labels:
+          name: "OPISLAC8"

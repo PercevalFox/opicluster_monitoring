@@ -1,0 +1,59 @@
+groups:
+  - name: node_alerts
+    rules:
+      - alert: NodeDown
+        expr: up{job="node"} == 0
+        for: 30s
+        labels:
+          severity: critical
+        annotations:
+          summary: "L'OPI {{ $labels.name }} ({{ $labels.instance }}) est KO !"
+          description: "L'OPI {{ $labels.name }} ({{ $labels.instance }}) ne répond pas depuis plus de 30 secondes."
+      - alert: TEMPERATURE OPI élevée !
+        expr: node_thermal_zone_temp{type="cpu-thermal"} > 70
+        for: 1m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Température supérieure à 70° sur {{ $labels.name }} ({{ $labels.instance }})"
+          description: "La température sur le nœud {{ $labels.name }} ({{ $labels.instance }}) dépasse 70°C depuis plus d'une minute."
+      - alert: HighCpuUsage
+        expr: (100 - avg(irate(node_cpu_seconds_total{mode="idle"}[5m])) by (instance) * 100) > 90
+        for: 2m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Utilisation CPU élevée sur {{ $labels.instance }}"
+          description: "L'utilisation CPU sur le nœud {{ $labels.instance }} dépasse 90% depuis plus de 2 minutes."
+      - alert: HighMemoryUsage
+        expr: (node_memory_MemTotal_bytes - node_memory_MemAvailable_bytes) / node_memory_MemTotal_bytes * 100 > 90
+        for: 2m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Utilisation mémoire élevée sur {{ $labels.instance }}"
+          description: "L'utilisation de la mémoire sur le nœud {{ $labels.instance }} dépasse 90% depuis plus de 2 minutes."
+      - alert: LowDiskSpace
+        expr: node_filesystem_avail_bytes{mountpoint="/"} / node_filesystem_size_bytes{mountpoint="/"} * 100 < 10
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Espace disque faible sur {{ $labels.instance }}"
+          description: "L'espace disque disponible sur le nœud {{ $labels.instance }} est inférieur à 10% depuis plus de 5 minutes."
+      - alert: HighSwapUsage
+        expr: ((node_memory_SwapTotal_bytes - node_memory_SwapFree_bytes) / node_memory_SwapTotal_bytes) * 100 > 50
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Utilisation de swap élevée sur {{ $labels.instance }}"
+          description: "L'utilisation du swap sur le nœud {{ $labels.instance }} dépasse 50% depuis plus de 5 minutes."
+      - alert: NetworkIssue
+        expr: sum(up{job="node", instance=~".*network.*"}) == 0
+        for: 1m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Problème réseau sur {{ $labels.instance }}"
+          description: "Le réseau sur le nœud {{ $labels.instance }} ne répond pas depuis plus d'une minute."
