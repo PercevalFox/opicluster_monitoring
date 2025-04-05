@@ -1,16 +1,38 @@
 http:
-  routers:
-    traefik-dashboard:
-      rule: Host(`traefik.monitoring.opicluster.online`)
-      entryPoints:
-        - websecure
-      service: api@internal
-      middlewares:
-        - traefik-auth
-      tls:
-        certResolver: myresolver
-
   middlewares:
+
     traefik-auth:
       basicAuth:
         usersFile: "/secrets/traefik_auth.htpasswd"
+        realm: "Secure Area"
+        removeHeader: true
+
+    security-headers:
+      headers:
+        contentSecurityPolicy: "default-src 'self'; style-src 'self' 'unsafe-inline'; font-src 'self'; img-src 'self' data:;"
+        referrerPolicy: "no-referrer"
+        permissionsPolicy: "geolocation=(), microphone=(), camera=(), payment=()"
+        frameDeny: true
+        browserXssFilter: true
+        sslRedirect: true
+        forceSTSHeader: true
+        stsIncludeSubdomains: true
+        stsPreload: true
+        stsSeconds: 63072000
+        customFrameOptionsValue: "SAMEORIGIN"
+        featurePolicy: "none"  # deprecated mais encore lu par certains clients
+
+    rate-limit:
+      rateLimit:
+        average: 40
+        burst: 80
+
+tls:
+  options:
+    default:
+      minVersion: VersionTLS13
+      sniStrict: true
+      cipherSuites:
+        - TLS_AES_128_GCM_SHA256
+        - TLS_AES_256_GCM_SHA384
+        - TLS_CHACHA20_POLY1305_SHA256

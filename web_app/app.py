@@ -6,10 +6,14 @@ from flask_mail import Mail, Message
 from sms_alert import send_sms
 
 app = Flask(__name__)
-app.secret_key = os.environ.get("FLASK_SECRET_KEY", "default-unsafe-devkey")
+app.secret_key = os.environ["FLASK_SECRET_KEY"]
 
 PROMETHEUS_URL = "http://prometheus:9090/api/v1/query"
 ALERTMANAGER_URL = "http://alertmanager:9093/api/v2/alerts"
+
+@app.route('/robots.txt')
+def robots():
+    return app.send_static_file('robots.txt')
 
 def get_node_metrics():
     query = 'up{job="node"}'
