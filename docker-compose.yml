@@ -22,8 +22,6 @@ services:
     image: traefik:v2.11
     container_name: traefik
     restart: unless-stopped
-    environment:
-      DOCKER_HOST: tcp://socket-proxy:2375
     depends_on:
       - socket-proxy
     command:
@@ -43,7 +41,7 @@ services:
       - "--accesslog=true"
       - "--accesslog.filepath=/logs/access.log"
       - "--global.sendAnonymousUsage=false"
-      - "--entryPoints.websecure.http.tls.options=default@file"
+      - "--experimental.localPlugins.geoblock.moduleName=github.com/PascalMinder/geoblock"
     ports:
       - "80:80"
       - "443:443"
@@ -52,6 +50,7 @@ services:
       - ./traefik/logs:/logs
       - ./traefik/secrets:/secrets:ro
       - ./traefik/traefik_dynamic.yml:/etc/traefik/dynamic/traefik_dynamic.yml
+      - /plugins-local/src/github.com/PascalMinder/GeoBlock:/plugins-local/src/github.com/PascalMinder/geoblock
     networks:
       - traefik_proxy
     labels:
@@ -76,6 +75,7 @@ services:
       - "traefik.http.routers.opi_webapp_https.tls=true"
       - "traefik.http.routers.opi_webapp_https.tls.certresolver=myresolver"
       - "traefik.http.routers.opi_webapp_https.middlewares=traefik-auth@file"
+      - "traefik.http.routers.opi_webapp_https.middlewares=geoblock-france@file,traefik-auth@file"
       - "traefik.http.services.opi_webapp.loadbalancer.server.port=5000"
 
   prometheus:
@@ -95,6 +95,7 @@ services:
       - "traefik.http.routers.prometheus.tls=true"
       - "traefik.http.routers.prometheus.tls.certresolver=myresolver"
       - "traefik.http.routers.prometheus.middlewares=traefik-auth@file"
+      - "traefik.http.routers.prometheus.middlewares=geoblock-france@file,traefik-auth@file"
       - "traefik.http.services.prometheus.loadbalancer.server.port=9090"
 
   alertmanager:
@@ -111,6 +112,7 @@ services:
       - "traefik.http.routers.alertmanager.tls=true"
       - "traefik.http.routers.alertmanager.tls.certresolver=myresolver"
       - "traefik.http.routers.alertmanager.middlewares=traefik-auth@file"
+      - "traefik.http.routers.alertmanager.middlewares=geoblock-france@file,traefik-auth@file"
       - "traefik.http.services.alertmanager.loadbalancer.server.port=9093"
 
   grafana:
@@ -132,6 +134,7 @@ services:
       - "traefik.http.routers.grafana.tls=true"
       - "traefik.http.routers.grafana.tls.certresolver=myresolver"
       - "traefik.http.routers.grafana.middlewares=traefik-auth@file"
+      - "traefik.http.routers.grafana.middlewares=geoblock-france@file,traefik-auth@file"
       - "traefik.http.services.grafana.loadbalancer.server.port=3000"
 
 networks:

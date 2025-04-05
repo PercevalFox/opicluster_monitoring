@@ -1,6 +1,22 @@
 http:
   middlewares:
 
+    geoblock-france:
+      plugin:
+        geoblock:  # correction ici !
+          allowLocalRequests: true
+          logLocalRequests: false
+          logAllowedRequests: false
+          logApiRequests: true
+          api: "https://get.geojs.io/v1/ip/country/{ip}"
+          apiTimeoutMs: 1000
+          cacheSize: 20
+          forceMonthlyUpdate: true
+          allowUnknownCountries: false
+          unknownCountryApiResponse: "nil"
+          countries:
+            - FR
+
     traefik-auth:
       basicAuth:
         usersFile: "/secrets/traefik_auth.htpasswd"
@@ -20,12 +36,11 @@ http:
         stsPreload: true
         stsSeconds: 63072000
         customFrameOptionsValue: "SAMEORIGIN"
-        featurePolicy: "none"  # deprecated mais encore lu par certains clients
 
     rate-limit:
       rateLimit:
-        average: 40
-        burst: 80
+        average: 20
+        burst: 40
 
 tls:
   options:
