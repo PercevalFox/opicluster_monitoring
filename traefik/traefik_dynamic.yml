@@ -3,7 +3,7 @@ http:
 
     geoblock-france:
       plugin:
-        geoblock:  # correction ici !
+        geoblock:
           allowLocalRequests: true
           logLocalRequests: false
           logAllowedRequests: false
@@ -16,6 +16,10 @@ http:
           unknownCountryApiResponse: "nil"
           countries:
             - FR
+    geoblock-only:
+      chain:
+        middlewares:
+          - geoblock-france
 
     traefik-auth:
       basicAuth:

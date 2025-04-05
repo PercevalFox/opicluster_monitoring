@@ -181,7 +181,7 @@ def index():
 @app.route('/alerts')
 def alerts():
     alerts_data = get_alerts()
-    return render_template('alerts.html', alerts=alerts_data)
+    return render_template('alerts.html', alerts=alerts_data, api_token=os.environ.get("API_SECRET_TOKEN"))
 
 @app.route('/settings')
 def settings():
@@ -189,20 +189,29 @@ def settings():
 
 @app.route('/sms_alert', methods=['POST'])
 def sms_alert():
+    auth_header = request.headers.get("Authorization", "")
+    expected_token = f"Bearer {os.environ.get('API_SECRET_TOKEN')}"
+
+    if auth_header != expected_token:
+        return jsonify({"error": "Accès refusé : Token invalide"}), 403
+
     data = request.json
     if data and "alerts" in data:
         for alert in data["alerts"]:
             status = alert.get("status", "firing")
             instance = alert['labels'].get('instance', 'unknown')
             summary = alert['annotations'].get('summary', 'Problème détecté')
+
             if status == "firing":
                 message = f"[ALERTE] {summary} sur {instance} (FIRING)"
             elif status == "resolved":
                 message = f"[RESOLU] {summary} sur {instance} (RESOLVED)"
             else:
                 message = f"[INCONNU] {summary} sur {instance} (status={status})"
+
             send_sms(message)
-    return jsonify({'status': 'SMS envoyé'})
+
+    return jsonify({'status': 'SMS envoyé'}), 200
 
 @app.route('/api/status')
 def api_status():

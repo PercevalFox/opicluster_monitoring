@@ -45,78 +45,49 @@
       <th>Description de test</th>
       <th>Envoyer SMS</th>
     </tr>
-    <!-- Exemple de test pour l'alerte NodeDown -->
-    <tr>
-      <td>NodeDown</td>
-      <td>L'OPI est KO (Test)</td>
-      <td><button onclick="sendTestAlert('NodeDown', 'KO')">Test SMS</button></td>
-    </tr>
-    <!-- Test pour HighTemperature -->
-    <tr>
-      <td>HighTemperature</td>
-      <td>Température > 70°C (Test)</td>
-      <td><button onclick="sendTestAlert('HighTemperature', 'Température élevée')">Test SMS</button></td>
-    </tr>
-    <!-- Test pour HighCpuUsage -->
-    <tr>
-      <td>HighCpuUsage</td>
-      <td>Utilisation CPU > 90% (Test)</td>
-      <td><button onclick="sendTestAlert('HighCpuUsage', 'CPU élevée')">Test SMS</button></td>
-    </tr>
-    <!-- Test pour HighMemoryUsage -->
-    <tr>
-      <td>HighMemoryUsage</td>
-      <td>Utilisation mémoire > 90% (Test)</td>
-      <td><button onclick="sendTestAlert('HighMemoryUsage', 'Mémoire élevée')">Test SMS</button></td>
-    </tr>
-    <!-- Test pour LowDiskSpace -->
-    <tr>
-      <td>LowDiskSpace</td>
-      <td>Espace disque < 10% (Test)</td>
-      <td><button onclick="sendTestAlert('LowDiskSpace', 'Espace disque faible')">Test SMS</button></td>
-    </tr>
-    <!-- Test pour HighSwapUsage -->
-    <tr>
-      <td>HighSwapUsage</td>
-      <td>Swap > 50% (Test)</td>
-      <td><button onclick="sendTestAlert('HighSwapUsage', 'Swap élevé')">Test SMS</button></td>
-    </tr>
-    <!-- Test pour NetworkIssue -->
-    <tr>
-      <td>NetworkIssue</td>
-      <td>Problème réseau (Test)</td>
-      <td><button onclick="sendTestAlert('NetworkIssue', 'Problème réseau')">Test SMS</button></td>
-    </tr>
+    <tr><td>NodeDown</td><td>L'OPI est KO (Test)</td><td><button onclick="sendTestAlert('NodeDown', 'KO')">Test SMS</button></td></tr>
+    <tr><td>HighTemperature</td><td>Température > 70°C (Test)</td><td><button onclick="sendTestAlert('HighTemperature', 'Température élevée')">Test SMS</button></td></tr>
+    <tr><td>HighCpuUsage</td><td>Utilisation CPU > 90% (Test)</td><td><button onclick="sendTestAlert('HighCpuUsage', 'CPU élevée')">Test SMS</button></td></tr>
+    <tr><td>HighMemoryUsage</td><td>Utilisation mémoire > 90% (Test)</td><td><button onclick="sendTestAlert('HighMemoryUsage', 'Mémoire élevée')">Test SMS</button></td></tr>
+    <tr><td>LowDiskSpace</td><td>Espace disque < 10% (Test)</td><td><button onclick="sendTestAlert('LowDiskSpace', 'Espace disque faible')">Test SMS</button></td></tr>
+    <tr><td>HighSwapUsage</td><td>Swap > 50% (Test)</td><td><button onclick="sendTestAlert('HighSwapUsage', 'Swap élevé')">Test SMS</button></td></tr>
+    <tr><td>NetworkIssue</td><td>Problème réseau (Test)</td><td><button onclick="sendTestAlert('NetworkIssue', 'Problème réseau')">Test SMS</button></td></tr>
   </table>
-  
+
   <p style="text-align:center;"><a href="/">Retour au Dashboard</a></p>
-  
+
   <script>
+    const API_TOKEN = "{{ api_token }}";
+  
     function sendTestAlert(alertname, summary, method = 'sms') {
-      // Prépare un payload test pour l'alerte
       const payload = {
-        alerts: [
-          {
-            labels: { instance: "192.168.1.19", alertname: alertname },
-            annotations: { summary: summary, description: summary + " (test)" },
-            status: method === 'sms' ? "firing" : "resolved"
-          }
-        ]
+        alerts: [{
+          labels: { instance: "192.168.1.19", alertname: alertname },
+          annotations: { summary: summary, description: summary + " (test)" },
+          status: "firing"
+        }]
       };
-      
-      const endpoint = method === 'sms' ? '/sms_alert' : '/mail_alert';
-      
+  
+      const endpoint = '/sms_alert';
+  
       fetch(endpoint, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ' + API_TOKEN
+        },
         body: JSON.stringify(payload)
       })
-      .then(response => response.json())
-      .then(data => {
-        alert("Test " + method.toUpperCase() + " envoyé: " + data.status);
+      .then(async response => {
+        if (!response.ok) {
+          const err = await response.text();
+          throw new Error(err);
+        }
+        const data = await response.json();
+        alert("Test SMS envoyé: " + (data.status || "Succès sans message"));
       })
       .catch(error => {
-        alert("Erreur lors de l'envoi du test " + method.toUpperCase() + ": " + error);
+        alert("Erreur lors de l'envoi du test SMS: " + error.message);
       });
     }
   </script>

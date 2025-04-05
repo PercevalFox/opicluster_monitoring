@@ -70,13 +70,32 @@ services:
       - traefik_proxy
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.opi_webapp_https.rule=Host(`monitoring.opicluster.online`)"
-      - "traefik.http.routers.opi_webapp_https.entrypoints=websecure"
-      - "traefik.http.routers.opi_webapp_https.tls=true"
-      - "traefik.http.routers.opi_webapp_https.tls.certresolver=myresolver"
-      - "traefik.http.routers.opi_webapp_https.middlewares=traefik-auth@file"
-      - "traefik.http.routers.opi_webapp_https.middlewares=geoblock-france@file,traefik-auth@file"
-      - "traefik.http.services.opi_webapp.loadbalancer.server.port=5000"
+      - "traefik.docker.network=traefik_proxy"
+
+      # 🌐 Redirection HTTP → HTTPS
+      - "traefik.http.routers.web_app_http.rule=Host(`monitoring.opicluster.online`)"
+      - "traefik.http.routers.web_app_http.entryPoints=web"
+      - "traefik.http.routers.web_app_http.middlewares=redirect-to-https"
+      - "traefik.http.middlewares.redirect-to-https.redirectscheme.scheme=https"
+
+      # 🔐 Route principale sécurisée
+      - "traefik.http.routers.web_app_https.rule=Host(`monitoring.opicluster.online`)"
+      - "traefik.http.routers.web_app_https.entryPoints=websecure"
+      - "traefik.http.routers.web_app_https.tls=true"
+      - "traefik.http.routers.web_app_https.tls.certresolver=myresolver"
+      - "traefik.http.routers.web_app_https.middlewares=geoblock-france@file,traefik-auth@file"
+      - "traefik.http.routers.web_app_https.service=web_app_main"
+      - "traefik.http.services.web_app_main.loadbalancer.server.port=5000"
+
+      # 📡 Route API dédiée pour /sms_alert (sans basicAuth)
+      - "traefik.http.routers.sms_alert_api.rule=Host(`monitoring.opicluster.online`) && PathPrefix(`/sms_alert`)"
+      - "traefik.http.routers.sms_alert_api.entrypoints=websecure"
+      - "traefik.http.routers.sms_alert_api.tls=true"
+      - "traefik.http.routers.sms_alert_api.tls.certresolver=myresolver"
+      - "traefik.http.routers.sms_alert_api.middlewares=geoblock-only@file"
+      - "traefik.http.routers.sms_alert_api.priority=100"
+      - "traefik.http.routers.sms_alert_api.service=sms_alert_service"
+      - "traefik.http.services.sms_alert_service.loadbalancer.server.port=5000"
 
   prometheus:
     image: prom/prometheus:latest
@@ -94,7 +113,6 @@ services:
       - "traefik.http.routers.prometheus.entryPoints=websecure"
       - "traefik.http.routers.prometheus.tls=true"
       - "traefik.http.routers.prometheus.tls.certresolver=myresolver"
-      - "traefik.http.routers.prometheus.middlewares=traefik-auth@file"
       - "traefik.http.routers.prometheus.middlewares=geoblock-france@file,traefik-auth@file"
       - "traefik.http.services.prometheus.loadbalancer.server.port=9090"
 
@@ -111,7 +129,6 @@ services:
       - "traefik.http.routers.alertmanager.entryPoints=websecure"
       - "traefik.http.routers.alertmanager.tls=true"
       - "traefik.http.routers.alertmanager.tls.certresolver=myresolver"
-      - "traefik.http.routers.alertmanager.middlewares=traefik-auth@file"
       - "traefik.http.routers.alertmanager.middlewares=geoblock-france@file,traefik-auth@file"
       - "traefik.http.services.alertmanager.loadbalancer.server.port=9093"
 
@@ -133,7 +150,6 @@ services:
       - "traefik.http.routers.grafana.entryPoints=websecure"
       - "traefik.http.routers.grafana.tls=true"
       - "traefik.http.routers.grafana.tls.certresolver=myresolver"
-      - "traefik.http.routers.grafana.middlewares=traefik-auth@file"
       - "traefik.http.routers.grafana.middlewares=geoblock-france@file,traefik-auth@file"
       - "traefik.http.services.grafana.loadbalancer.server.port=3000"
 
