@@ -1,23 +1,15 @@
-# opicluster_monitoring
+# 🛡️ OPI Cluster Monitoring - DevSecOps Infra  
 
-opicluster_monitoring/  
-├── alertmanager/  
-│   ├── alertmanager.template.yml  
-│   └── alertmanager.yml       # ← généré automatiquement  
-├── grafana-data/              # ← data persistante (gitignore)  
-├── prometheus/  
-│   ├── prometheus.yml  
-│   └── alert.rules.yml  
-├── traefik/  
-│   ├── acme/  
-│   │   └── acme.json          # ← certificats TLS (gitignore)  
-├── web_app/  
-│   ├── app.py  
-│   ├── auth.py  
-│   ├── sms_alert.py  
-│   ├── templates/  
-│   └── static/  
-├── docker-compose.yml  
-├── .env.secrets               # ← non versionné  
-├── generate-config.sh  
-└── README.md  
+Infrastructure sécurisée dédiée au monitoring et à la gestion d'un cluster Kubernetes (K3S) constitué de 12 Orange Pi 3 LTS et monitoré par un Raspberry Pi 4.  
+
+## 🚀 Stack technique utilisée  
+
+* Traefik v2.11 (Reverse proxy sécurisé avec GeoIP)  
+
+* Docker Compose (gestion unifiée des services)  
+
+* Grafana / Prometheus / Alertmanager (monitoring avancé)  
+
+* Web App (dashboard custom Python/Flask)  
+
+* Docker Socket Proxy (sécurisation socket Docker)  
