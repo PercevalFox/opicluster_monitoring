@@ -64,6 +64,11 @@ services:
   web_app:
     build: ./web_app
     container_name: web_app
+    security_opt:
+      - no-new-privileges:true
+    read_only: true
+    tmpfs:
+      - /tmp
     env_file:
       - .env.secrets
     networks:
