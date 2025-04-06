@@ -42,7 +42,7 @@
           <th>403</th>
           <th>404</th>
           <th>User-Agent</th>
-          <th>Paths</th>
+          <th>Critical Paths</th>
         </tr>
       </thead>
       <tbody>
@@ -66,7 +66,7 @@
             <td>{{ ip['403'] }}</td>
             <td>{{ ip['404'] }}</td>
             <td>{{ ip['UA_sample'] }}</td>
-            <td>{{ ip['Top_paths'] }}</td>
+            <td class="critical-paths" title="{{ ip['Critical_paths'] }}">{{ ip['Critical_paths'] }}</td>
           </tr>
         {% endfor %}
       </tbody>
@@ -84,7 +84,7 @@
           <th>403</th>
           <th>404</th>
           <th>User-Agent</th>
-          <th>Paths</th>
+          <th>Critical Paths</th>
         </tr>
       </thead>
       <tbody>
@@ -108,7 +108,7 @@
             <td>{{ ip['403'] }}</td>
             <td>{{ ip['404'] }}</td>
             <td>{{ ip['UA_sample'] }}</td>
-            <td>{{ ip['Top_paths'] }}</td>
+            <td class="critical-paths" title="{{ ip['Critical_paths'] }}">{{ ip['Critical_paths'] }}</td>
           </tr>
         {% endfor %}
       </tbody>

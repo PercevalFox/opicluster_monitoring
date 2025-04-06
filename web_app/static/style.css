@@ -159,4 +159,16 @@
     background-color: #f44336;
     color: white;
   }
-  
+  td.critical-paths {
+    max-width: 300px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  td.critical-paths:hover {
+    white-space: normal;
+    overflow: visible;
+    z-index: 10;
+    position: relative;
+    background: #1f1f1f;
+  }

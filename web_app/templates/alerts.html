@@ -65,6 +65,8 @@
     &copy; 2025 Opicluster - Monitoring by Uncle Web =D
   </footer>
   <script>
+    const API_TOKEN = "{{ api_token }}";
+  
     function sendTestAlert(alertname, summary, method = 'sms') {
       const payload = {
         alerts: [{
@@ -73,10 +75,12 @@
           status: "firing"
         }]
       };
+  
       fetch('/sms_alert', {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ' + API_TOKEN
         },
         body: JSON.stringify(payload)
       })
@@ -85,7 +89,7 @@
         alert("Test SMS envoyé: " + data.status);
       })
       .catch(error => {
-        alert("Erreur lors de l'envoi du test SMS: " + error);
+        alert("Erreur lors de l'envoi du test SMS: " + error.message);
       });
     }
   </script>
