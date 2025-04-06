@@ -1,42 +1,15 @@
 <!DOCTYPE html>
 <html lang="fr">
-<head>
-  <meta charset="UTF-8">
-  <title>IP Suspectes - Opicluster Monitoring</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="robots" content="noindex, nofollow, nosnippet, noarchive, noodp, noimageindex">
-  <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}" type="image/x-icon">
-  <link href="https://fonts.googleapis.com/css2?family=Fira+Code&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
-  <style>
-    * { box-sizing: border-box; }
-    body { margin: 0; padding: 0; background: #121212; color: #e0e0e0; font-family: 'Fira Code', monospace; }
-    header { background: linear-gradient(90deg, #1a1a2e, #16213e); padding: 20px; text-align: center; box-shadow: 0 4px 8px rgba(0,0,0,0.5); }
-    header h1 { margin: 0; font-size: 2.8em; color: #82aaff; }
-    header p { margin: 5px 0 0; font-size: 1.2em; color: #c0c0c0; }
-    nav { text-align: center; padding: 10px 0; background: #1f1f2e; }
-    nav a { color: #82aaff; text-decoration: none; margin: 0 15px; font-size: 1.1em; transition: color 0.3s; }
-    nav a:hover { color: #5c8bd9; }
-    .container { max-width: 1200px; margin: 20px auto; padding: 0 20px; }
-
-    table { width: 100%; border-collapse: collapse; margin-top: 20px; font-size: 14px; }
-    th, td { padding: 10px 12px; border-bottom: 1px solid #333; text-align: left; }
-    th { background-color: #1f1f2e; color: #82aaff; }
-    tr:hover { background-color: #1a1a1a; }
-
-    .badge {
-      padding: 4px 10px;
-      border-radius: 8px;
-      font-weight: bold;
-      font-size: 13px;
-    }
-    .low { background-color: #4caf50; color: black; }
-    .medium { background-color: #ffc107; color: black; }
-    .high { background-color: #f44336; color: white; }
-
-    footer { text-align: center; margin-top: 40px; padding: 20px 0; background: #1a1a2e; color: #888; font-size: 0.9em; }
-  </style>
-</head>
+    <head>
+        <meta charset="UTF-8">
+        <title>IP Supectes - Opicluster Monitoring</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="robots" content="noindex, nofollow, noarchive">
+        <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}" type="image/x-icon">
+        <link href="https://fonts.googleapis.com/css2?family=Fira+Code&display=swap" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
+        <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+      </head>
 <body>
   <header>
     <h1>Opicluster Monitoring</h1>

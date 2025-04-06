@@ -1,42 +1,15 @@
 <!DOCTYPE html>
 <html lang="fr">
-<head>
-  <meta charset="UTF-8">
-  <title>Opicluster Monitoring - DevSecOps</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="robots" content="noindex, nofollow, nosnippet, noarchive, noodp, noimageindex">
-  <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}" type="image/x-icon">
-  <!-- Google Fonts -->
-  <link href="https://fonts.googleapis.com/css2?family=Fira+Code&display=swap" rel="stylesheet">
-  <!-- Font Awesome -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css" integrity="sha512-..." crossorigin="anonymous" referrerpolicy="no-referrer" />
-  <style>
-    * { box-sizing: border-box; }
-    body { margin: 0; padding: 0; background: #121212; color: #e0e0e0; font-family: 'Fira Code', monospace; }
-    header { background: linear-gradient(90deg, #1a1a2e, #16213e); padding: 20px; text-align: center; box-shadow: 0 4px 8px rgba(0,0,0,0.5); }
-    header h1 { margin: 0; font-size: 2.8em; color: #82aaff; }
-    header p { margin: 5px 0 0; font-size: 1.2em; color: #c0c0c0; }
-    nav { text-align: center; padding: 10px 0; background: #1f1f2e; }
-    nav a { color: #82aaff; text-decoration: none; margin: 0 15px; font-size: 1.1em; transition: color 0.3s; }
-    nav a:hover { color: #5c8bd9; }
-    .container { max-width: 1200px; margin: 20px auto; padding: 0 20px; }
-    .global-cards, .node-grid { display: grid; gap: 20px; }
-    .global-cards { grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); margin-bottom: 40px; }
-    .card, .node-card {
-      background: #1e1e2f; padding: 20px; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.4); transition: transform 0.2s;
-    }
-    .card:hover, .node-card:hover { transform: translateY(-5px); }
-    .card h2, .node-card h3 { margin-top: 0; color: #82aaff; text-align: center; }
-    .card p, .node-card p { margin: 10px 0; font-size: 1.1em; text-align: center; }
-    .status { font-size: 1.2em; margin-bottom: 8px; }
-    .status.up { color: #1abc9c; }
-    .status.down { color: #e74c3c; }
-    .consumption-table { width: 100%; border-collapse: collapse; margin-top: 30px; }
-    .consumption-table th, .consumption-table td { padding: 10px; text-align: center; border: 1px solid #333; }
-    .consumption-table th { background: #1f1f2e; color: #82aaff; }
-    footer { text-align: center; margin-top: 40px; padding: 20px 0; background: #1a1a2e; color: #888; font-size: 0.9em; }
-  </style>
-</head>
+  <head>
+    <meta charset="UTF-8">
+    <title>Opicluster Monitoring</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow, noarchive">
+    <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}" type="image/x-icon">
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  </head>
 <body>
   <header>
     <h1>Opicluster Monitoring</h1>

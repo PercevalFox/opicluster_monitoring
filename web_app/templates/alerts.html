@@ -2,35 +2,24 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8">
-  <title>Alerts - Opicluster Monitoring</title>
-  <meta name="robots" content="noindex, nofollow, nosnippet, noarchive, noodp, noimageindex">
+  <title>Opicluster Monitoring</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex, nofollow, noarchive">
+  <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}" type="image/x-icon">
   <link href="https://fonts.googleapis.com/css2?family=Fira+Code&display=swap" rel="stylesheet">
-  <style>
-    body { background: #121212; color: #e0e0e0; font-family: 'Fira Code', monospace; padding: 20px; }
-    h1, h2 { text-align: center; color: #82aaff; }
-    .alert { border: 1px solid #333; border-radius: 8px; padding: 15px; margin: 10px 0; }
-    .alert h3 { margin: 0 0 10px; }
-    .alert p { margin: 5px 0; }
-    .up { color: #1abc9c; }
-    .down { color: #e74c3c; }
-    a { color: #82aaff; text-decoration: none; }
-    table { border-collapse: collapse; width: 100%; margin-top: 30px; }
-    th, td { border: 1px solid #333; padding: 8px; text-align: center; }
-    th { background: #1f1f2e; color: #82aaff; }
-    button { background: #82aaff; color: #121212; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer; }
-    button:hover { background: #5c8bd9; }
-  </style>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
   <header>
     <h1>Opicluster Monitoring</h1>
-    <p>IP Suspectes • DevSecOps</p>
+    <p>DevSecOps | k3s | Orange Pi Cluster</p>
   </header>
   <nav>
     <a href="/">Dashboard</a>
     <a href="/alerts">Alerts</a>
     <a href="/settings">Settings</a>
-    <a href="/ip_threats">IP Blocklist</a>
+    <a href="/ip_threats">Ip blocklist</a>
     <a href="https://webmail.amen.fr/appsuite/" target="_blank">Webmail</a>
     <a href="https://prometheus.monitoring.opicluster.online/" target="_blank">Prometheus</a>
     <a href="https://alertmanager.monitoring.opicluster.online/" target="_blank">Alertmanager</a>
@@ -38,43 +27,44 @@
     <a href="https://traefik.monitoring.opicluster.online/" target="_blank">Traefik</a>
     <a href="https://github.com/PercevalFox/opicluster_monitoring" target="_blank">GitHub</a>
   </nav>
-  <h1>Alertes Actives</h1>
-  {% if alerts %}
-    {% for alert in alerts %}
-      <div class="alert">
-        <h3>{{ alert.labels.alertname }}</h3>
-        <p><strong>Instance:</strong> {{ alert.labels.instance }}</p>
-        <p><strong>Summary:</strong> {{ alert.annotations.summary }}</p>
-        <p><strong>Description:</strong> {{ alert.annotations.description }}</p>
-        <p><strong>Status:</strong> {{ alert.status }}</p>
-        <p><strong>Starts at:</strong> {{ alert.startsAt }}</p>
-      </div>
-    {% endfor %}
-  {% else %}
-    <p style="text-align:center;">Aucune alerte active.</p>
-  {% endif %}
-  
-  <h2>Test d'Alertes</h2>
-  <table>
-    <tr>
-      <th>Alerte</th>
-      <th>Description de test</th>
-      <th>Envoyer SMS</th>
-    </tr>
-    <tr><td>NodeDown</td><td>L'OPI est KO (Test)</td><td><button onclick="sendTestAlert('NodeDown', 'KO')">Test SMS</button></td></tr>
-    <tr><td>HighTemperature</td><td>Température > 70°C (Test)</td><td><button onclick="sendTestAlert('HighTemperature', 'Température élevée')">Test SMS</button></td></tr>
-    <tr><td>HighCpuUsage</td><td>Utilisation CPU > 90% (Test)</td><td><button onclick="sendTestAlert('HighCpuUsage', 'CPU élevée')">Test SMS</button></td></tr>
-    <tr><td>HighMemoryUsage</td><td>Utilisation mémoire > 90% (Test)</td><td><button onclick="sendTestAlert('HighMemoryUsage', 'Mémoire élevée')">Test SMS</button></td></tr>
-    <tr><td>LowDiskSpace</td><td>Espace disque < 10% (Test)</td><td><button onclick="sendTestAlert('LowDiskSpace', 'Espace disque faible')">Test SMS</button></td></tr>
-    <tr><td>HighSwapUsage</td><td>Swap > 50% (Test)</td><td><button onclick="sendTestAlert('HighSwapUsage', 'Swap élevé')">Test SMS</button></td></tr>
-    <tr><td>NetworkIssue</td><td>Problème réseau (Test)</td><td><button onclick="sendTestAlert('NetworkIssue', 'Problème réseau')">Test SMS</button></td></tr>
-  </table>
+  <div class="container">
+    <h1>Alertes Actives</h1>
+    {% if alerts %}
+      {% for alert in alerts %}
+        <div class="alert">
+          <h3>{{ alert.labels.alertname }}</h3>
+          <p><strong>Instance:</strong> {{ alert.labels.instance }}</p>
+          <p><strong>Summary:</strong> {{ alert.annotations.summary }}</p>
+          <p><strong>Description:</strong> {{ alert.annotations.description }}</p>
+          <p><strong>Status:</strong> {{ alert.status }}</p>
+          <p><strong>Starts at:</strong> {{ alert.startsAt }}</p>
+        </div>
+      {% endfor %}
+    {% else %}
+      <p style="text-align:center;">Aucune alerte active.</p>
+    {% endif %}
 
-  <p style="text-align:center;"><a href="/">Retour au Dashboard</a></p>
-
+    <h2>Test d'Alertes</h2>
+    <table>
+      <tr>
+        <th>Alerte</th>
+        <th>Description de test</th>
+        <th>Envoyer SMS</th>
+      </tr>
+      <tr><td>NodeDown</td><td>L'OPI est KO (Test)</td><td><button onclick="sendTestAlert('NodeDown', 'KO')">Test SMS</button></td></tr>
+      <tr><td>HighTemperature</td><td>Température > 70°C (Test)</td><td><button onclick="sendTestAlert('HighTemperature', 'Température élevée')">Test SMS</button></td></tr>
+      <tr><td>HighCpuUsage</td><td>Utilisation CPU > 90% (Test)</td><td><button onclick="sendTestAlert('HighCpuUsage', 'CPU élevée')">Test SMS</button></td></tr>
+      <tr><td>HighMemoryUsage</td><td>Utilisation mémoire > 90% (Test)</td><td><button onclick="sendTestAlert('HighMemoryUsage', 'Mémoire élevée')">Test SMS</button></td></tr>
+      <tr><td>LowDiskSpace</td><td>Espace disque < 10% (Test)</td><td><button onclick="sendTestAlert('LowDiskSpace', 'Espace disque faible')">Test SMS</button></td></tr>
+      <tr><td>HighSwapUsage</td><td>Swap > 50% (Test)</td><td><button onclick="sendTestAlert('HighSwapUsage', 'Swap élevé')">Test SMS</button></td></tr>
+      <tr><td>NetworkIssue</td><td>Problème réseau (Test)</td><td><button onclick="sendTestAlert('NetworkIssue', 'Problème réseau')">Test SMS</button></td></tr>
+    </table>
+    <p style="text-align:center; margin-top:30px;"><a href="/">Retour au Dashboard</a></p>
+  </div>
+  <footer>
+    &copy; 2025 Opicluster - Monitoring by Uncle Web =D
+  </footer>
   <script>
-    const API_TOKEN = "{{ api_token }}";
-  
     function sendTestAlert(alertname, summary, method = 'sms') {
       const payload = {
         alerts: [{
@@ -83,27 +73,19 @@
           status: "firing"
         }]
       };
-  
-      const endpoint = '/sms_alert';
-  
-      fetch(endpoint, {
+      fetch('/sms_alert', {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json',
-          'Authorization': 'Bearer ' + API_TOKEN
+          'Content-Type': 'application/json'
         },
         body: JSON.stringify(payload)
       })
-      .then(async response => {
-        if (!response.ok) {
-          const err = await response.text();
-          throw new Error(err);
-        }
-        const data = await response.json();
-        alert("Test SMS envoyé: " + (data.status || "Succès sans message"));
+      .then(response => response.json())
+      .then(data => {
+        alert("Test SMS envoyé: " + data.status);
       })
       .catch(error => {
-        alert("Erreur lors de l'envoi du test SMS: " + error.message);
+        alert("Erreur lors de l'envoi du test SMS: " + error);
       });
     }
   </script>

@@ -2,28 +2,24 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8">
-  <title>Settings - Opicluster Monitoring</title>
-  <meta name="robots" content="noindex, nofollow, nosnippet, noarchive, noodp, noimageindex">
+  <title>Opicluster Monitoring</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex, nofollow, noarchive">
+  <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}" type="image/x-icon">
   <link href="https://fonts.googleapis.com/css2?family=Fira+Code&display=swap" rel="stylesheet">
-  <style>
-    body { background: #121212; color: #e0e0e0; font-family: 'Fira Code', monospace; padding: 20px; }
-    h1 { text-align: center; color: #82aaff; }
-    .container { max-width: 800px; margin: auto; text-align: center; }
-    button { background: #82aaff; color: #121212; border: none; padding: 10px 20px; margin: 10px; border-radius: 5px; font-size: 1em; cursor: pointer; }
-    button:hover { background: #5c8bd9; }
-    a { color: #82aaff; text-decoration: none; }
-  </style>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
   <header>
     <h1>Opicluster Monitoring</h1>
-    <p>IP Suspectes • DevSecOps</p>
+    <p>DevSecOps | k3s | Orange Pi Cluster</p>
   </header>
   <nav>
     <a href="/">Dashboard</a>
     <a href="/alerts">Alerts</a>
     <a href="/settings">Settings</a>
-    <a href="/ip_threats">IP Blocklist</a>
+    <a href="/ip_threats">Ip blocklist</a>
     <a href="https://webmail.amen.fr/appsuite/" target="_blank">Webmail</a>
     <a href="https://prometheus.monitoring.opicluster.online/" target="_blank">Prometheus</a>
     <a href="https://alertmanager.monitoring.opicluster.online/" target="_blank">Alertmanager</a>
@@ -31,11 +27,17 @@
     <a href="https://traefik.monitoring.opicluster.online/" target="_blank">Traefik</a>
     <a href="https://github.com/PercevalFox/opicluster_monitoring" target="_blank">GitHub</a>
   </nav>
-  <h1>Settings</h1>
   <div class="container">
-    <p>Page de configuration et paramètres du système.</p>
-    <p id="response"></p>
-    <p><a href="/">Retour au Dashboard</a></p>
+    <h1>Settings</h1>
+    <p style="text-align:center; font-size: 1.2em; margin-bottom: 40px;">
+      Page de configuration et paramètres du système.
+    </p>
+    <div style="text-align: center;">
+      <a href="/" style="font-size: 1.1em;">Retour au Dashboard</a>
+    </div>
   </div>
+  <footer>
+    &copy; 2025 Opicluster - Monitoring by Uncle Web =D
+  </footer>
 </body>
 </html>

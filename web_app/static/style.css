@@ -1,0 +1,162 @@
+
+* {
+    box-sizing: border-box;
+  }
+  body {
+    margin: 0;
+    padding: 0;
+    background: #121212;
+    color: #e0e0e0;
+    font-family: 'Fira Code', monospace;
+  }
+  header {
+    background: linear-gradient(90deg, #1a1a2e, #16213e);
+    padding: 20px;
+    text-align: center;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.5);
+  }
+  header h1 {
+    margin: 0;
+    font-size: 2.8em;
+    color: #82aaff;
+  }
+  header p {
+    margin: 5px 0 0;
+    font-size: 1.2em;
+    color: #c0c0c0;
+  }
+  nav {
+    text-align: center;
+    padding: 10px 0;
+    background: #1f1f2e;
+  }
+  nav a {
+    color: #82aaff;
+    text-decoration: none;
+    margin: 0 15px;
+    font-size: 1.1em;
+    transition: color 0.3s;
+  }
+  nav a:hover {
+    color: #5c8bd9;
+  }
+  .container {
+    max-width: 1200px;
+    margin: 40px auto;
+    padding: 0 20px;
+  }
+  .card, .node-card, .alert {
+    background: #1e1e2f;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.4);
+    transition: transform 0.2s;
+    margin-bottom: 20px;
+  }
+  .card:hover, .node-card:hover, .alert:hover {
+    transform: translateY(-5px);
+  }
+  .card h2, .node-card h3, .alert h3 {
+    margin-top: 0;
+    color: #82aaff;
+    text-align: center;
+  }
+  .card p, .node-card p, .alert p {
+    margin: 10px 0;
+    font-size: 1.1em;
+    text-align: center;
+  }
+  .global-cards, .node-grid {
+    display: grid;
+    gap: 20px;
+  }
+  .global-cards {
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    margin-bottom: 40px;
+  }
+  .status {
+    font-size: 1.2em;
+    margin-bottom: 8px;
+  }
+  .status.up {
+    color: #1abc9c;
+  }
+  .status.down {
+    color: #e74c3c;
+  }
+  footer {
+    text-align: center;
+    margin-top: 60px;
+    padding: 20px 0;
+    background: #1a1a2e;
+    color: #888;
+    font-size: 0.9em;
+  }
+  h1, h2 {
+    text-align: center;
+    color: #82aaff;
+    margin-bottom: 20px;
+  }
+  h1 {
+    font-size: 2.2em;
+    margin-top: 40px;
+  }
+  h2 {
+    font-size: 1.6em;
+    margin-top: 50px;
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 30px;
+    font-size: 14px;
+  }
+  th, td {
+    padding: 12px 16px;
+    text-align: center;
+    border: 1px solid #333;
+  }
+  tr:hover {
+    background-color: #1a1a1a;
+  }
+  th {
+    background: #1f1f2e;
+    color: #82aaff;
+  }
+  button {
+    background: #82aaff;
+    color: #121212;
+    border: none;
+    padding: 8px 16px;
+    font-weight: bold;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+  }
+  button:hover {
+    background: #5c8bd9;
+    transform: scale(1.05);
+  }
+  a {
+    color: #82aaff;
+    text-decoration: none;
+  }
+  .badge {
+    padding: 4px 10px;
+    border-radius: 8px;
+    font-weight: bold;
+    font-size: 13px;
+  }
+  .low {
+    background-color: #4caf50;
+    color: black;
+  }
+  .medium {
+    background-color: #ffc107;
+    color: black;
+  }
+  .high {
+    background-color: #f44336;
+    color: white;
+  }
+  
