@@ -4,12 +4,33 @@ import requests
 from flask import Flask, render_template, request, abort, jsonify
 from flask_mail import Mail, Message
 from sms_alert import send_sms
+import json
 
 app = Flask(__name__)
 app.secret_key = os.environ["FLASK_SECRET_KEY"]
 
 PROMETHEUS_URL = "http://prometheus:9090/api/v1/query"
 ALERTMANAGER_URL = "http://alertmanager:9093/api/v2/alerts"
+
+def country_to_flag(cc):
+    if not cc or len(cc) != 2:
+        return "❓"
+    return chr(127397 + ord(cc[0].upper())) + chr(127397 + ord(cc[1].upper()))
+
+@app.route('/ip_threats')
+def ip_threats():
+    data_file = "/home/foxink/opicluster_monitoring/data/suspicious_ips.json"
+    try:
+        with open(data_file, 'r') as f:
+            ip_data = json.load(f)
+    except Exception as e:
+        return f"<pre>Erreur : {str(e)}</pre>", 500
+
+    for ip in ip_data:
+        ip["Flag"] = country_to_flag(ip.get("CountryCode", "XX"))
+
+    ip_data.sort(key=lambda x: x.get("Score", 0), reverse=True)
+    return render_template("ip_threats.html", ips=ip_data)
 
 @app.route('/robots.txt')
 def robots():

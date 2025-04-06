@@ -22,6 +22,22 @@
   </style>
 </head>
 <body>
+  <header>
+    <h1>Opicluster Monitoring</h1>
+    <p>IP Suspectes • DevSecOps</p>
+  </header>
+  <nav>
+    <a href="/">Dashboard</a>
+    <a href="/alerts">Alerts</a>
+    <a href="/settings">Settings</a>
+    <a href="/ip_threats">IP Blocklist</a>
+    <a href="https://webmail.amen.fr/appsuite/" target="_blank">Webmail</a>
+    <a href="https://prometheus.monitoring.opicluster.online/" target="_blank">Prometheus</a>
+    <a href="https://alertmanager.monitoring.opicluster.online/" target="_blank">Alertmanager</a>
+    <a href="https://grafana.monitoring.opicluster.online/" target="_blank">Grafana</a>
+    <a href="https://traefik.monitoring.opicluster.online/" target="_blank">Traefik</a>
+    <a href="https://github.com/PercevalFox/opicluster_monitoring" target="_blank">GitHub</a>
+  </nav>
   <h1>Alertes Actives</h1>
   {% if alerts %}
     {% for alert in alerts %}

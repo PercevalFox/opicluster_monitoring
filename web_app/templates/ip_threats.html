@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>IP Suspectes - Opicluster Monitoring</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex, nofollow, nosnippet, noarchive, noodp, noimageindex">
+  <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}" type="image/x-icon">
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Code&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <style>
+    * { box-sizing: border-box; }
+    body { margin: 0; padding: 0; background: #121212; color: #e0e0e0; font-family: 'Fira Code', monospace; }
+    header { background: linear-gradient(90deg, #1a1a2e, #16213e); padding: 20px; text-align: center; box-shadow: 0 4px 8px rgba(0,0,0,0.5); }
+    header h1 { margin: 0; font-size: 2.8em; color: #82aaff; }
+    header p { margin: 5px 0 0; font-size: 1.2em; color: #c0c0c0; }
+    nav { text-align: center; padding: 10px 0; background: #1f1f2e; }
+    nav a { color: #82aaff; text-decoration: none; margin: 0 15px; font-size: 1.1em; transition: color 0.3s; }
+    nav a:hover { color: #5c8bd9; }
+    .container { max-width: 1200px; margin: 20px auto; padding: 0 20px; }
+
+    table { width: 100%; border-collapse: collapse; margin-top: 20px; font-size: 14px; }
+    th, td { padding: 10px 12px; border-bottom: 1px solid #333; text-align: left; }
+    th { background-color: #1f1f2e; color: #82aaff; }
+    tr:hover { background-color: #1a1a1a; }
+
+    .badge {
+      padding: 4px 10px;
+      border-radius: 8px;
+      font-weight: bold;
+      font-size: 13px;
+    }
+    .low { background-color: #4caf50; color: black; }
+    .medium { background-color: #ffc107; color: black; }
+    .high { background-color: #f44336; color: white; }
+
+    footer { text-align: center; margin-top: 40px; padding: 20px 0; background: #1a1a2e; color: #888; font-size: 0.9em; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Opicluster Monitoring</h1>
+    <p>IP Suspectes • DevSecOps</p>
+  </header>
+  <nav>
+    <a href="/">Dashboard</a>
+    <a href="/alerts">Alerts</a>
+    <a href="/settings">Settings</a>
+    <a href="/ip_threats">IP Blocklist</a>
+    <a href="https://webmail.amen.fr/appsuite/" target="_blank">Webmail</a>
+    <a href="https://prometheus.monitoring.opicluster.online/" target="_blank">Prometheus</a>
+    <a href="https://alertmanager.monitoring.opicluster.online/" target="_blank">Alertmanager</a>
+    <a href="https://grafana.monitoring.opicluster.online/" target="_blank">Grafana</a>
+    <a href="https://traefik.monitoring.opicluster.online/" target="_blank">Traefik</a>
+    <a href="https://github.com/PercevalFox/opicluster_monitoring" target="_blank">GitHub</a>
+  </nav>
+
+  <div class="container">
+    <h2 style="text-align:center;">🔥 Top 5 IPs les plus dangereuses</h2>
+    {% if ips %}
+    <table>
+      <thead>
+        <tr>
+          <th>IP</th>
+          <th>Pays</th>
+          <th>Score</th>
+          <th>Req</th>
+          <th>401</th>
+          <th>403</th>
+          <th>404</th>
+          <th>User-Agent</th>
+          <th>Paths</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for ip in ips[:5] %}
+          {% set badge = 'low' if ip['Score'] < 8 else 'medium' if ip['Score'] < 14 else 'high' %}
+          <tr>
+            <td>{{ ip['IP'] }}</td>
+            <td>
+                {% if ip['CountryCode'] == "XX" %}
+                  🏴‍☠️ {{ ip['Country'] }}
+                {% else %}
+                  <img src="https://flagcdn.com/h20/{{ ip['CountryCode']|lower }}.png" 
+                       alt="{{ ip['Country'] }}" 
+                       style="height:16px; vertical-align:middle; margin-right:5px; border-radius:3px;">
+                  {{ ip['Country'] }}
+                {% endif %}
+              </td>
+            <td><span class="badge {{ badge }}">{{ ip['Score'] }}</span></td>
+            <td>{{ ip['Requests'] }}</td>
+            <td>{{ ip['401'] }}</td>
+            <td>{{ ip['403'] }}</td>
+            <td>{{ ip['404'] }}</td>
+            <td>{{ ip['UA_sample'] }}</td>
+            <td>{{ ip['Top_paths'] }}</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+
+    <h2 style="margin-top: 40px; text-align:center;">📋 Liste complète</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>IP</th>
+          <th>Pays</th>
+          <th>Score</th>
+          <th>Req</th>
+          <th>401</th>
+          <th>403</th>
+          <th>404</th>
+          <th>User-Agent</th>
+          <th>Paths</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for ip in ips %}
+          {% set badge = 'low' if ip['Score'] < 8 else 'medium' if ip['Score'] < 14 else 'high' %}
+          <tr>
+            <td>{{ ip['IP'] }}</td>
+            <td>
+                {% if ip['CountryCode'] == "XX" %}
+                  🏴‍☠️ {{ ip['Country'] }}
+                {% else %}
+                  <img src="https://flagcdn.com/h20/{{ ip['CountryCode']|lower }}.png" 
+                       alt="{{ ip['Country'] }}" 
+                       style="height:16px; vertical-align:middle; margin-right:5px; border-radius:3px;">
+                  {{ ip['Country'] }}
+                {% endif %}
+              </td>
+            <td><span class="badge {{ badge }}">{{ ip['Score'] }}</span></td>
+            <td>{{ ip['Requests'] }}</td>
+            <td>{{ ip['401'] }}</td>
+            <td>{{ ip['403'] }}</td>
+            <td>{{ ip['404'] }}</td>
+            <td>{{ ip['UA_sample'] }}</td>
+            <td>{{ ip['Top_paths'] }}</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    {% else %}
+      <p style="text-align:center;">Aucune IP suspecte détectée pour le moment.</p>
+    {% endif %}
+  </div>
+
+  <footer>
+    &copy; 2025 Opicluster - Monitoring by Uncle Web =D
+  </footer>
+</body>
+</html>

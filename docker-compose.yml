@@ -96,6 +96,8 @@ services:
       - "traefik.http.routers.sms_alert_api.priority=100"
       - "traefik.http.routers.sms_alert_api.service=sms_alert_service"
       - "traefik.http.services.sms_alert_service.loadbalancer.server.port=5000"
+    volumes:
+      - ./data:/home/foxink/opicluster_monitoring/data
 
   prometheus:
     image: prom/prometheus:latest
