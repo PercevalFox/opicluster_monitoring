@@ -266,5 +266,28 @@ def get_alerts():
         print("Erreur get_alerts:", e)
         return []
 
+@app.route('/api/bot/status')
+@limiter.limit("3 per second;10 per minute")
+def api_bot_status():
+    bearer = request.headers.get("Authorization", "")
+    expected = f"Bearer {os.environ.get('API_SECRET_TOKEN', '')}"
+    if bearer != expected:
+        return jsonify({"error": "Unauthorized"}), 401
+    return jsonify(get_cluster_metrics())
+
+@app.route('/api/bot/ip_threats')
+def api_bot_ip_threats():
+    bearer = request.headers.get("Authorization", "")
+    expected = f"Bearer {os.environ.get('API_SECRET_TOKEN', '')}"
+    if bearer != expected:
+        return jsonify({"error": "Unauthorized"}), 401
+
+    try:
+        with open("data/suspicious_ips.json", "r") as f:
+            data = json.load(f)
+        return jsonify(data)
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000)

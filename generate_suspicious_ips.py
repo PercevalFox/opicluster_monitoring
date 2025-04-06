@@ -7,7 +7,7 @@ from datetime import datetime
 
 LOG_PATH = "/home/foxink/opicluster_monitoring/traefik/logs/access.log"
 OUTPUT_PATH = "/home/foxink/opicluster_monitoring/data/suspicious_ips.json"
-WHITELIST = {"192.168.1.254", "45.155.41.95"}
+WHITELIST = {"192.168.1.254", "45.155.41.95", "37.167.128.28"}
 
 SENSITIVE_PATHS = [
     "wp-admin", "phpmyadmin", "backup", "admin", "config", "env", ".git", "passwd", "root",

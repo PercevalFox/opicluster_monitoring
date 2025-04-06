@@ -1,6 +1,7 @@
 # === Secrets & config sensibles ===
 .env
 .env.secrets
+.env.bot
 alertmanager/alertmanager.yml
 traefik/secrets/traefik_auth.htpasswd
 

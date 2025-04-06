@@ -101,8 +101,28 @@ services:
       - "traefik.http.routers.sms_alert_api.priority=100"
       - "traefik.http.routers.sms_alert_api.service=sms_alert_service"
       - "traefik.http.services.sms_alert_service.loadbalancer.server.port=5000"
+      
+      # 📡 API Bot Status dédiée (pas de basicAuth)
+      - "traefik.http.routers.bot_status_api.rule=Host(`monitoring.opicluster.online`) && PathPrefix(`/api/bot/status`)"
+      - "traefik.http.routers.bot_status_api.entrypoints=websecure"
+      - "traefik.http.routers.bot_status_api.tls=true"
+      - "traefik.http.routers.bot_status_api.tls.certresolver=myresolver"
+      - "traefik.http.routers.bot_status_api.middlewares=geoblock-only@file"
+      - "traefik.http.routers.bot_status_api.priority=102"
+      - "traefik.http.routers.bot_status_api.service=web_app_main"
+
+      # 📡 API Bot ipthreats dédiée (pas de basicAuth)
+      - "traefik.http.routers.bot_ipthreats_api.rule=Host(`monitoring.opicluster.online`) && PathPrefix(`/api/bot/ip_threats`)"
+      - "traefik.http.routers.bot_ipthreats_api.entrypoints=websecure"
+      - "traefik.http.routers.bot_ipthreats_api.tls=true"
+      - "traefik.http.routers.bot_ipthreats_api.tls.certresolver=myresolver"
+      - "traefik.http.routers.bot_ipthreats_api.middlewares=geoblock-only@file"
+      - "traefik.http.routers.bot_ipthreats_api.priority=103"
+      - "traefik.http.routers.bot_ipthreats_api.service=web_app_main"
+
     volumes:
       - ./data:/home/foxink/opicluster_monitoring/data
+      - ./data:/app/data
 
   prometheus:
     image: prom/prometheus:latest
@@ -145,7 +165,7 @@ services:
     env_file:
       - .env.secrets
     environment:
-      - "GF_PATHS_CONFIG=/etc/grafana/grafana.ini"
+      - GF_PATHS_CONFIG=/etc/grafana/grafana.ini
     volumes:
       - ./grafana-data:/var/lib/grafana
       - ./grafana/grafana.ini:/etc/grafana/grafana.ini
@@ -159,6 +179,20 @@ services:
       - "traefik.http.routers.grafana.tls.certresolver=myresolver"
       - "traefik.http.routers.grafana.middlewares=geoblock-france@file,traefik-auth@file"
       - "traefik.http.services.grafana.loadbalancer.server.port=3000"
+
+  discord_bot:
+    build: ./discord_bot
+    container_name: discord_bot
+    env_file:
+      - .env.bot
+    restart: unless-stopped
+    networks:
+      - traefik_proxy
+    read_only: true
+    tmpfs:
+      - /tmp
+    security_opt:
+      - no-new-privileges:true
 
 networks:
   traefik_proxy:
