@@ -8,7 +8,7 @@ ACCESS_LOG = "/logs/access.log"
 BANLIST_FILE = "/data/banlist.json"
 PROM_FILE = "/data/ip_threat.prom"
 BAN_THRESHOLD = 15
-SLEEP_INTERVAL = 60  # secondes
+SLEEP_INTERVAL = 3600  # secondes
 WHITELIST = {"192.168.1.254", "45.155.41.95", "37.167.128.28"}
 
 def parse_access_log():
