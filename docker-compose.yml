@@ -76,7 +76,7 @@ services:
     container_name: web_app
     security_opt:
       - no-new-privileges:true
-      - seccomp=unconfined
+      - seccomp=./seccomp/my_seccomp.json
     cap_drop:
       - ALL
     read_only: true
@@ -236,7 +236,7 @@ services:
       - /tmp
     security_opt:
       - no-new-privileges:true
-      - seccomp=unconfined
+      - seccomp=./seccomp/my_seccomp.json
     cap_drop:
       - ALL
     healthcheck:

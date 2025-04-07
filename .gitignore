@@ -19,7 +19,6 @@ __pycache__/
 *.swp
 
 # === Traefik (certificats ACME générés) ===
-
 traefik/acme/acme.json
 
 # === Sauvegardes ===
@@ -27,8 +26,7 @@ Save/
 backup/
 
 # === Useless === 
-<<<<<<< HEAD
 ORGA.md
-=======
-ORGA.md
->>>>>>> 782708c (🔥 Cleanup: remove secrets/data from Git tracking)
+
+# === Scan Bandit ===
+opicluster_monitoring/data/bandit_report_*
