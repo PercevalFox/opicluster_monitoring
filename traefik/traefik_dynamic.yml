@@ -1,5 +1,11 @@
 http:
   middlewares:
+    error-pages:
+      errors:
+        status:
+          - "403"
+        service: dummy-error
+        query: "/403.html"
 
     geoblock-france:
       plugin:
@@ -16,6 +22,7 @@ http:
           unknownCountryApiResponse: "nil"
           countries:
             - FR
+
     geoblock-only:
       chain:
         middlewares:
@@ -29,7 +36,11 @@ http:
 
     security-headers:
       headers:
-        contentSecurityPolicy: "default-src 'self'; style-src 'self' 'unsafe-inline'; font-src 'self'; img-src 'self' data:;"
+        contentSecurityPolicy: >
+          default-src 'self';
+          style-src 'self' 'unsafe-inline' https://fonts.googleapis.com;
+          font-src 'self' https://fonts.gstatic.com;
+          img-src 'self' data: https:;
         referrerPolicy: "no-referrer"
         permissionsPolicy: "geolocation=(), microphone=(), camera=(), payment=()"
         customResponseHeaders:
@@ -47,6 +58,12 @@ http:
       rateLimit:
         average: 20
         burst: 40
+
+  services:
+    dummy-error:
+      loadBalancer:
+        servers:
+          - url: "http://web_app:5000"
 
 tls:
   options:

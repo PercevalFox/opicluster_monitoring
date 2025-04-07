@@ -5,7 +5,7 @@ import hmac
 import hashlib
 import requests
 from ipaddress import ip_address
-from flask import Flask, render_template, request, jsonify, make_response
+from flask import Flask, render_template, request, jsonify, make_response, abort
 from flask_mail import Mail, Message
 from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
@@ -23,6 +23,28 @@ limiter = Limiter(get_remote_address, app=app, default_limits=["5 per second", "
 
 PROMETHEUS_URL = "http://prometheus:9090/api/v1/query"
 ALERTMANAGER_URL = "http://alertmanager:9093/api/v2/alerts"
+
+BANLIST_PATH = os.path.join(os.path.dirname(__file__), '../data/banlist.json')
+cached_banlist = {"banned_ips": []}
+banlist_last_modified = 0
+
+@app.before_request
+def check_ip_ban():
+    global cached_banlist, banlist_last_modified
+
+    try:
+        stat = os.stat(BANLIST_PATH)
+        if stat.st_mtime != banlist_last_modified:
+            with open(BANLIST_PATH, 'r') as f:
+                cached_banlist = json.load(f)
+                banlist_last_modified = stat.st_mtime
+    except Exception as e:
+        print(f"[!] Error loading banlist: {e}")
+        return  # fail open
+
+    client_ip = request.headers.get('X-Forwarded-For', request.remote_addr)
+    if client_ip in cached_banlist.get("banned_ips", []):
+        abort(403, description="⚠️ Accès interdit : votre IP est bloquée.")
 
 @app.after_request
 def secure_headers(response):
@@ -307,5 +329,10 @@ def api_bot_ip_threats():
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
+@app.route('/403.html')
+def custom_403():
+    return render_template("403.html"), 403
+
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000)
+
