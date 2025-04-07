@@ -17,6 +17,11 @@ services:
       - "/var/run/docker.sock:/var/run/docker.sock:ro"
     networks:
       - traefik_proxy
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "-q", "http://localhost:2375/_ping"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
 
   traefik:
     image: traefik:v2.11
@@ -60,12 +65,20 @@ services:
       - "traefik.http.routers.traefik-dashboard.entryPoints=websecure"
       - "traefik.http.routers.traefik-dashboard.tls.certresolver=myresolver"
       - "traefik.http.routers.traefik-dashboard.middlewares=traefik-auth@file"
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "-q", "http://localhost:80/ping"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
 
   web_app:
     build: ./web_app
     container_name: web_app
     security_opt:
       - no-new-privileges:true
+      - seccomp=unconfined
+    cap_drop:
+      - ALL
     read_only: true
     tmpfs:
       - /tmp
@@ -76,14 +89,10 @@ services:
     labels:
       - "traefik.enable=true"
       - "traefik.docker.network=traefik_proxy"
-
-      # 🌐 Redirection HTTP → HTTPS
       - "traefik.http.routers.web_app_http.rule=Host(`monitoring.opicluster.online`)"
       - "traefik.http.routers.web_app_http.entryPoints=web"
       - "traefik.http.routers.web_app_http.middlewares=redirect-to-https"
       - "traefik.http.middlewares.redirect-to-https.redirectscheme.scheme=https"
-
-      # 🔐 Route principale sécurisée
       - "traefik.http.routers.web_app_https.rule=Host(`monitoring.opicluster.online`)"
       - "traefik.http.routers.web_app_https.entryPoints=websecure"
       - "traefik.http.routers.web_app_https.tls=true"
@@ -91,8 +100,6 @@ services:
       - "traefik.http.routers.web_app_https.middlewares=geoblock-france@file,traefik-auth@file"
       - "traefik.http.routers.web_app_https.service=web_app_main"
       - "traefik.http.services.web_app_main.loadbalancer.server.port=5000"
-
-      # 📡 Route API dédiée pour /sms_alert (sans basicAuth)
       - "traefik.http.routers.sms_alert_api.rule=Host(`monitoring.opicluster.online`) && PathPrefix(`/sms_alert`)"
       - "traefik.http.routers.sms_alert_api.entrypoints=websecure"
       - "traefik.http.routers.sms_alert_api.tls=true"
@@ -101,8 +108,6 @@ services:
       - "traefik.http.routers.sms_alert_api.priority=100"
       - "traefik.http.routers.sms_alert_api.service=sms_alert_service"
       - "traefik.http.services.sms_alert_service.loadbalancer.server.port=5000"
-      
-      # 📡 API Bot Status dédiée (pas de basicAuth)
       - "traefik.http.routers.bot_status_api.rule=Host(`monitoring.opicluster.online`) && PathPrefix(`/api/bot/status`)"
       - "traefik.http.routers.bot_status_api.entrypoints=websecure"
       - "traefik.http.routers.bot_status_api.tls=true"
@@ -110,8 +115,6 @@ services:
       - "traefik.http.routers.bot_status_api.middlewares=geoblock-only@file"
       - "traefik.http.routers.bot_status_api.priority=102"
       - "traefik.http.routers.bot_status_api.service=web_app_main"
-
-      # 📡 API Bot ipthreats dédiée (pas de basicAuth)
       - "traefik.http.routers.bot_ipthreats_api.rule=Host(`monitoring.opicluster.online`) && PathPrefix(`/api/bot/ip_threats`)"
       - "traefik.http.routers.bot_ipthreats_api.entrypoints=websecure"
       - "traefik.http.routers.bot_ipthreats_api.tls=true"
@@ -119,10 +122,14 @@ services:
       - "traefik.http.routers.bot_ipthreats_api.middlewares=geoblock-only@file"
       - "traefik.http.routers.bot_ipthreats_api.priority=103"
       - "traefik.http.routers.bot_ipthreats_api.service=web_app_main"
-
     volumes:
       - ./data:/home/foxink/opicluster_monitoring/data
       - ./data:/app/data
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5000/"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
 
   prometheus:
     image: prom/prometheus:latest
@@ -142,6 +149,11 @@ services:
       - "traefik.http.routers.prometheus.tls.certresolver=myresolver"
       - "traefik.http.routers.prometheus.middlewares=geoblock-france@file,traefik-auth@file"
       - "traefik.http.services.prometheus.loadbalancer.server.port=9090"
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "-q", "http://localhost:9090/-/ready"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
 
   alertmanager:
     image: prom/alertmanager:latest
@@ -158,6 +170,11 @@ services:
       - "traefik.http.routers.alertmanager.tls.certresolver=myresolver"
       - "traefik.http.routers.alertmanager.middlewares=geoblock-france@file,traefik-auth@file"
       - "traefik.http.services.alertmanager.loadbalancer.server.port=9093"
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "-q", "http://localhost:9093/-/ready"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
 
   grafana:
     image: grafana/grafana:latest
@@ -179,6 +196,11 @@ services:
       - "traefik.http.routers.grafana.tls.certresolver=myresolver"
       - "traefik.http.routers.grafana.middlewares=geoblock-france@file,traefik-auth@file"
       - "traefik.http.services.grafana.loadbalancer.server.port=3000"
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "-q", "http://localhost:3000/api/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
 
   discord_bot:
     build: ./discord_bot
@@ -193,6 +215,14 @@ services:
       - /tmp
     security_opt:
       - no-new-privileges:true
+      - seccomp=unconfined
+    cap_drop:
+      - ALL
+    healthcheck:
+      test: ["CMD-SHELL", "pgrep -f bot.py || exit 1"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
 
 networks:
   traefik_proxy:
