@@ -15,7 +15,6 @@ from werkzeug.middleware.proxy_fix import ProxyFix
 app = Flask(__name__)
 app.secret_key = os.environ["FLASK_SECRET_KEY"]
 app.wsgi_app = ProxyFix(app.wsgi_app, x_for=1, x_proto=1, x_host=1)
-
 app.config["SERVER_NAME"] = "monitoring.opicluster.online"
 
 # Rate limiting global
@@ -28,10 +27,28 @@ BANLIST_PATH = os.path.join(os.path.dirname(__file__), '../data/banlist.json')
 cached_banlist = {"banned_ips": []}
 banlist_last_modified = 0
 
+@app.after_request
+def set_additional_security_headers(response):
+    response.headers["X-Frame-Options"] = "SAMEORIGIN"
+    response.headers["X-Content-Type-Options"] = "nosniff"
+    response.headers["X-XSS-Protection"] = "1; mode=block"
+    response.headers["Cache-Control"] = "no-store"
+    return response
+
+@app.after_request
+def set_csp(response):
+    response.headers["Content-Security-Policy"] = (
+        "default-src 'self'; "
+        "script-src 'self' 'unsafe-inline'; "
+        "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com; "
+        "font-src 'self' https://fonts.gstatic.com https://cdnjs.cloudflare.com; "
+        "img-src 'self' data: https://flagcdn.com;"
+    )
+    return response
+
 @app.before_request
 def check_ip_ban():
     global cached_banlist, banlist_last_modified
-
     try:
         stat = os.stat(BANLIST_PATH)
         if stat.st_mtime != banlist_last_modified:
@@ -41,19 +58,9 @@ def check_ip_ban():
     except Exception as e:
         print(f"[!] Error loading banlist: {e}")
         return  # fail open
-
     client_ip = request.headers.get('X-Forwarded-For', request.remote_addr)
     if client_ip in cached_banlist.get("banned_ips", []):
         abort(403, description="⚠️ Accès interdit : votre IP est bloquée.")
-
-@app.after_request
-def secure_headers(response):
-    response.headers["X-Frame-Options"] = "SAMEORIGIN"
-    response.headers["X-Content-Type-Options"] = "nosniff"
-    response.headers["X-XSS-Protection"] = "1; mode=block"
-    response.headers["Cache-Control"] = "no-store"
-    response.headers["Content-Security-Policy"] = "default-src 'self'"
-    return response
 
 @app.before_request
 def block_options():
@@ -80,10 +87,8 @@ def ip_threats():
             ip_data = json.load(f)
     except Exception as e:
         return f"<pre>Erreur : {str(e)}</pre>", 500
-
     for ip in ip_data:
         ip["Flag"] = country_to_flag(ip.get("CountryCode", "XX"))
-
     ip_data.sort(key=lambda x: x.get("Score", 0), reverse=True)
     return render_template("ip_threats.html", ips=ip_data)
 
@@ -99,11 +104,11 @@ def index():
 @app.route('/alerts')
 def alerts():
     alerts_data = get_alerts()
-    return render_template('alerts.html', alerts=alerts_data, api_token=os.environ.get("API_SECRET_TOKEN"))
+    return render_template("alerts.html", alerts=alerts_data, api_token=os.environ.get("API_SECRET_TOKEN"))
 
 @app.route('/settings')
 def settings():
-    return render_template('settings.html')
+    return render_template("settings.html")
 
 @app.route('/api/status')
 def api_status():
@@ -114,8 +119,6 @@ def api_status():
 def sms_alert():
     raw_body = request.get_data()
     remote_ip = request.remote_addr
-
-    # Auth locale fallback
     if is_internal_request(remote_ip):
         bearer = request.headers.get("Authorization", "")
         expected = f"Bearer {os.environ.get('API_SECRET_TOKEN', '')}"
@@ -123,15 +126,12 @@ def sms_alert():
             app.logger.warning(f"[SECURITY] Token refusé depuis IP interne {remote_ip}")
             return jsonify({"error": "Token invalide"}), 403
     else:
-        # HMAC obligatoire
         signature = request.headers.get("X-Signature", "")
         api_key = os.environ.get("API_SECRET_KEY", "")
         expected_hmac = hmac.new(api_key.encode(), raw_body, hashlib.sha256).hexdigest()
-
         if not hmac.compare_digest(signature, expected_hmac):
             app.logger.warning(f"[SECURITY] Signature HMAC refusée depuis {remote_ip}")
             return jsonify({"error": "Signature invalide"}), 403
-
     try:
         data = json.loads(raw_body)
         if data and "alerts" in data:
@@ -139,25 +139,20 @@ def sms_alert():
                 status = alert.get("status", "firing")
                 instance = alert['labels'].get('instance', 'unknown')
                 summary = alert['annotations'].get('summary', 'Problème détecté')
-
                 if status == "firing":
                     message = f"[ALERTE] {summary} sur {instance} (FIRING)"
                 elif status == "resolved":
                     message = f"[RESOLU] {summary} sur {instance} (RESOLVED)"
                 else:
                     message = f"[INCONNU] {summary} sur {instance} (status={status})"
-
                 send_sms(message)
             return jsonify({'status': 'SMS envoyé'}), 200
-
     except Exception as e:
         app.logger.error(f"[ERROR] Erreur /sms_alert : {str(e)}")
         return jsonify({"error": "Erreur interne"}), 500
-
     return jsonify({"error": "Format invalide"}), 400
 
 # Helpers Prometheus ----------------------------
-
 def get_node_metrics():
     query = 'up{job="node"}'
     try:
@@ -244,7 +239,6 @@ def get_cluster_metrics():
     loads = get_load_5m()
     fs = get_filesystem()
     tcp = get_tcp_estab()
-
     for display_name, data in metrics.items():
         inst = data.get('instance', display_name.split()[0])
         data['temperature'] = temps.get(display_name) or temps.get(inst, None)
@@ -268,7 +262,6 @@ def get_cluster_data():
     ram_available = 2 * 1024 * 1024 * 1024
     ram_used_percentage = (1 - (ram_available / ram_total)) * 100
     total_power = sum(data.get('power', 0) for data in metrics.values())
-
     kW = total_power / 1000.0
     energy_minute = kW / 60.0
     cost_minute = energy_minute * 0.1696
@@ -280,7 +273,6 @@ def get_cluster_data():
     cost_week = energy_week * 0.1696
     energy_month = kW * 24 * 30
     cost_month = energy_month * 0.1696 + 14.0359
-
     return {
         "total_cpu_cores": total_cpu_cores,
         "ram_used_percentage": ram_used_percentage,
@@ -321,7 +313,6 @@ def api_bot_ip_threats():
     expected = f"Bearer {os.environ.get('API_SECRET_TOKEN', '')}"
     if bearer != expected:
         return jsonify({"error": "Unauthorized"}), 401
-
     try:
         with open("data/suspicious_ips.json", "r") as f:
             data = json.load(f)
@@ -335,4 +326,3 @@ def custom_403():
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000)
-
