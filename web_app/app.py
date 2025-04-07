@@ -5,20 +5,38 @@ import hmac
 import hashlib
 import requests
 from ipaddress import ip_address
-from flask import Flask, render_template, request, jsonify
+from flask import Flask, render_template, request, jsonify, make_response
 from flask_mail import Mail, Message
 from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
 from sms_alert import send_sms
+from werkzeug.middleware.proxy_fix import ProxyFix
 
 app = Flask(__name__)
 app.secret_key = os.environ["FLASK_SECRET_KEY"]
+app.wsgi_app = ProxyFix(app.wsgi_app, x_for=1, x_proto=1, x_host=1)
+
+app.config["SERVER_NAME"] = "monitoring.opicluster.online"
 
 # Rate limiting global
 limiter = Limiter(get_remote_address, app=app, default_limits=["5 per second", "30 per minute"])
 
 PROMETHEUS_URL = "http://prometheus:9090/api/v1/query"
 ALERTMANAGER_URL = "http://alertmanager:9093/api/v2/alerts"
+
+@app.after_request
+def secure_headers(response):
+    response.headers["X-Frame-Options"] = "SAMEORIGIN"
+    response.headers["X-Content-Type-Options"] = "nosniff"
+    response.headers["X-XSS-Protection"] = "1; mode=block"
+    response.headers["Cache-Control"] = "no-store"
+    response.headers["Content-Security-Policy"] = "default-src 'self'"
+    return response
+
+@app.before_request
+def block_options():
+    if request.method == 'OPTIONS' and not request.path.startswith("/api"):
+        return make_response("Method Not Allowed", 405)
 
 def is_internal_request(ip):
     try:

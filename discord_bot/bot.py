@@ -26,6 +26,28 @@ bot = commands.Bot(
 # Variable pour l'uptime
 start_time = time.time()
 
+@bot.command(name="serverinfo")
+async def server_info(ctx):
+    """Affiche les informations du serveur Discord"""
+    
+    guild = ctx.guild  # Récupère l'objet Guild (le serveur Discord)
+    
+    # Crée un message d'information avec des détails sur le serveur
+    embed = discord.Embed(
+        title=f"Informations sur le serveur {guild.name}",
+        description=f"ID: {guild.id}",
+        color=discord.Color.blue()
+    )
+    
+    # Ajoute les champs avec des émoticônes
+    embed.add_field(name="👑 Propriétaire", value=guild.owner, inline=True)
+    embed.add_field(name="👥 Membres", value=guild.member_count, inline=True)
+    embed.add_field(name="📅 Créé le", value=guild.created_at.strftime('%Y-%m-%d %H:%M:%S'), inline=True)
+    embed.add_field(name="🚀 Boosts", value=guild.premium_subscription_count, inline=True)
+    
+    # Affiche l'embed dans le canal où la commande a été exécutée
+    await ctx.send(embed=embed)
+
 # Quand le bot est prêt, initialiser le scheduler et envoyer un message dans le canal spécifique
 @bot.event
 async def on_ready():

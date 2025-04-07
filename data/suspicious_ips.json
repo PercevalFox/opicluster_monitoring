@@ -291,8 +291,8 @@
   },
   {
     "IP": "109.205.213.198",
-    "Country": "United States",
-    "CountryCode": "US",
+    "Country": "Unknown",
+    "CountryCode": "XX",
     "Score": 13,
     "Score_breakdown": {
       "errors": 6,
@@ -308,8 +308,8 @@
   },
   {
     "IP": "176.53.216.10",
-    "Country": "Russia",
-    "CountryCode": "RU",
+    "Country": "Unknown",
+    "CountryCode": "XX",
     "Score": 10,
     "Score_breakdown": {
       "errors": 6,
@@ -324,8 +324,8 @@
   },
   {
     "IP": "89.104.111.54",
-    "Country": "Russia",
-    "CountryCode": "RU",
+    "Country": "Unknown",
+    "CountryCode": "XX",
     "Score": 10,
     "Score_breakdown": {
       "errors": 6,
@@ -433,10 +433,10 @@
       "ua": 4,
       "repeat": 3
     },
-    "Requests": 42,
+    "Requests": 43,
     "401": 0,
     "403": 0,
-    "404": 42,
+    "404": 43,
     "UA_sample": "-",
     "Critical_paths": ""
   },
@@ -2909,8 +2909,8 @@
   },
   {
     "IP": "176.53.221.135",
-    "Country": "Russia",
-    "CountryCode": "RU",
+    "Country": "Unknown",
+    "CountryCode": "XX",
     "Score": 10,
     "Score_breakdown": {
       "errors": 6,
@@ -2941,8 +2941,8 @@
   },
   {
     "IP": "154.223.139.192",
-    "Country": "Russia",
-    "CountryCode": "RU",
+    "Country": "Unknown",
+    "CountryCode": "XX",
     "Score": 10,
     "Score_breakdown": {
       "errors": 6,
@@ -2989,8 +2989,8 @@
   },
   {
     "IP": "89.104.111.76",
-    "Country": "Russia",
-    "CountryCode": "RU",
+    "Country": "Unknown",
+    "CountryCode": "XX",
     "Score": 10,
     "Score_breakdown": {
       "errors": 6,
@@ -3022,8 +3022,8 @@
   },
   {
     "IP": "172.171.246.10",
-    "Country": "United States",
-    "CountryCode": "US",
+    "Country": "Unknown",
+    "CountryCode": "XX",
     "Score": 10,
     "Score_breakdown": {
       "errors": 6,
@@ -3038,8 +3038,8 @@
   },
   {
     "IP": "162.216.150.61",
-    "Country": "Unknown",
-    "CountryCode": "XX",
+    "Country": "United States",
+    "CountryCode": "US",
     "Score": 10,
     "Score_breakdown": {
       "errors": 6,
@@ -3071,8 +3071,8 @@
   },
   {
     "IP": "5.9.50.77",
-    "Country": "Germany",
-    "CountryCode": "DE",
+    "Country": "Unknown",
+    "CountryCode": "XX",
     "Score": 10,
     "Score_breakdown": {
       "errors": 6,
@@ -3169,8 +3169,8 @@
   },
   {
     "IP": "45.90.63.211",
-    "Country": "Unknown",
-    "CountryCode": "XX",
+    "Country": "Russia",
+    "CountryCode": "RU",
     "Score": 10,
     "Score_breakdown": {
       "errors": 6,
@@ -3185,8 +3185,8 @@
   },
   {
     "IP": "89.104.110.243",
-    "Country": "Russia",
-    "CountryCode": "RU",
+    "Country": "Unknown",
+    "CountryCode": "XX",
     "Score": 10,
     "Score_breakdown": {
       "errors": 6,
@@ -3233,8 +3233,8 @@
   },
   {
     "IP": "45.90.60.5",
-    "Country": "Unknown",
-    "CountryCode": "XX",
+    "Country": "Russia",
+    "CountryCode": "RU",
     "Score": 10,
     "Score_breakdown": {
       "errors": 6,
@@ -3281,8 +3281,8 @@
   },
   {
     "IP": "176.53.219.208",
-    "Country": "Unknown",
-    "CountryCode": "XX",
+    "Country": "Russia",
+    "CountryCode": "RU",
     "Score": 10,
     "Score_breakdown": {
       "errors": 6,
@@ -3329,8 +3329,8 @@
   },
   {
     "IP": "45.90.60.19",
-    "Country": "Russia",
-    "CountryCode": "RU",
+    "Country": "Unknown",
+    "CountryCode": "XX",
     "Score": 10,
     "Score_breakdown": {
       "errors": 6,
@@ -3361,23 +3361,6 @@
   },
   {
     "IP": "170.39.218.2",
-    "Country": "United States",
-    "CountryCode": "US",
-    "Score": 15,
-    "Score_breakdown": {
-      "errors": 6,
-      "sensitive": 5,
-      "ua": 4
-    },
-    "Requests": 3,
-    "401": 0,
-    "403": 0,
-    "404": 3,
-    "UA_sample": "-",
-    "Critical_paths": ""
-  },
-  {
-    "IP": "81.17.20.106",
     "Country": "Unknown",
     "CountryCode": "XX",
     "Score": 15,
@@ -3394,9 +3377,26 @@
     "Critical_paths": ""
   },
   {
+    "IP": "81.17.20.106",
+    "Country": "Switzerland",
+    "CountryCode": "CH",
+    "Score": 15,
+    "Score_breakdown": {
+      "errors": 6,
+      "sensitive": 5,
+      "ua": 4
+    },
+    "Requests": 3,
+    "401": 0,
+    "403": 0,
+    "404": 3,
+    "UA_sample": "-",
+    "Critical_paths": ""
+  },
+  {
     "IP": "195.201.168.79",
-    "Country": "Germany",
-    "CountryCode": "DE",
+    "Country": "Unknown",
+    "CountryCode": "XX",
     "Score": 10,
     "Score_breakdown": {
       "errors": 6,
@@ -3427,8 +3427,8 @@
   },
   {
     "IP": "172.172.245.78",
-    "Country": "Unknown",
-    "CountryCode": "XX",
+    "Country": "United States",
+    "CountryCode": "US",
     "Score": 10,
     "Score_breakdown": {
       "errors": 6,
@@ -3499,8 +3499,8 @@
   },
   {
     "IP": "185.213.175.171",
-    "Country": "Unknown",
-    "CountryCode": "XX",
+    "Country": "The Netherlands",
+    "CountryCode": "NL",
     "Score": 10,
     "Score_breakdown": {
       "errors": 6,
@@ -3515,8 +3515,8 @@
   },
   {
     "IP": "45.155.41.58",
-    "Country": "Unknown",
-    "CountryCode": "XX",
+    "Country": "Luxembourg",
+    "CountryCode": "LU",
     "Score": 13,
     "Score_breakdown": {
       "errors": 6,
@@ -3532,8 +3532,8 @@
   },
   {
     "IP": "64.23.184.185",
-    "Country": "Unknown",
-    "CountryCode": "XX",
+    "Country": "United States",
+    "CountryCode": "US",
     "Score": 10,
     "Score_breakdown": {
       "errors": 6,
@@ -3548,8 +3548,8 @@
   },
   {
     "IP": "196.251.85.250",
-    "Country": "Unknown",
-    "CountryCode": "XX",
+    "Country": "The Netherlands",
+    "CountryCode": "NL",
     "Score": 15,
     "Score_breakdown": {
       "errors": 6,
@@ -3565,8 +3565,8 @@
   },
   {
     "IP": "128.199.1.21",
-    "Country": "Unknown",
-    "CountryCode": "XX",
+    "Country": "United States",
+    "CountryCode": "US",
     "Score": 10,
     "Score_breakdown": {
       "errors": 6,
@@ -3581,8 +3581,8 @@
   },
   {
     "IP": "34.140.63.218",
-    "Country": "Unknown",
-    "CountryCode": "XX",
+    "Country": "Belgium",
+    "CountryCode": "BE",
     "Score": 10,
     "Score_breakdown": {
       "errors": 6,
@@ -3613,8 +3613,8 @@
   },
   {
     "IP": "167.94.146.50",
-    "Country": "Unknown",
-    "CountryCode": "XX",
+    "Country": "Germany",
+    "CountryCode": "DE",
     "Score": 15,
     "Score_breakdown": {
       "errors": 6,
@@ -3646,8 +3646,8 @@
   },
   {
     "IP": "154.223.139.66",
-    "Country": "Unknown",
-    "CountryCode": "XX",
+    "Country": "Russia",
+    "CountryCode": "RU",
     "Score": 10,
     "Score_breakdown": {
       "errors": 6,
@@ -3678,8 +3678,8 @@
   },
   {
     "IP": "45.90.63.163",
-    "Country": "Unknown",
-    "CountryCode": "XX",
+    "Country": "Russia",
+    "CountryCode": "RU",
     "Score": 10,
     "Score_breakdown": {
       "errors": 6,
@@ -3694,8 +3694,8 @@
   },
   {
     "IP": "154.223.139.218",
-    "Country": "Unknown",
-    "CountryCode": "XX",
+    "Country": "Russia",
+    "CountryCode": "RU",
     "Score": 10,
     "Score_breakdown": {
       "errors": 6,
@@ -3710,8 +3710,8 @@
   },
   {
     "IP": "89.104.111.180",
-    "Country": "Unknown",
-    "CountryCode": "XX",
+    "Country": "Russia",
+    "CountryCode": "RU",
     "Score": 10,
     "Score_breakdown": {
       "errors": 6,
@@ -3726,8 +3726,8 @@
   },
   {
     "IP": "89.104.110.109",
-    "Country": "Unknown",
-    "CountryCode": "XX",
+    "Country": "Russia",
+    "CountryCode": "RU",
     "Score": 10,
     "Score_breakdown": {
       "errors": 6,
@@ -3806,8 +3806,8 @@
   },
   {
     "IP": "176.53.217.190",
-    "Country": "Unknown",
-    "CountryCode": "XX",
+    "Country": "Russia",
+    "CountryCode": "RU",
     "Score": 10,
     "Score_breakdown": {
       "errors": 6,
@@ -3838,8 +3838,8 @@
   },
   {
     "IP": "45.148.10.34",
-    "Country": "Unknown",
-    "CountryCode": "XX",
+    "Country": "The Netherlands",
+    "CountryCode": "NL",
     "Score": 32,
     "Score_breakdown": {
       "errors": 6,
@@ -3934,10 +3934,10 @@
       "sensitive": 5,
       "ua": 4
     },
-    "Requests": 2,
+    "Requests": 3,
     "401": 0,
     "403": 0,
-    "404": 2,
+    "404": 3,
     "UA_sample": "-",
     "Critical_paths": ""
   },
@@ -3961,15 +3961,16 @@
     "IP": "164.90.218.136",
     "Country": "Germany",
     "CountryCode": "DE",
-    "Score": 10,
+    "Score": 15,
     "Score_breakdown": {
       "errors": 6,
+      "sensitive": 5,
       "ua": 4
     },
-    "Requests": 1,
+    "Requests": 2,
     "401": 0,
     "403": 0,
-    "404": 1,
+    "404": 2,
     "UA_sample": "-",
     "Critical_paths": ""
   },
@@ -4181,10 +4182,10 @@
       "errors": 6,
       "ua": 4
     },
-    "Requests": 4,
+    "Requests": 5,
     "401": 0,
     "403": 0,
-    "404": 4,
+    "404": 5,
     "UA_sample": "-",
     "Critical_paths": ""
   },
@@ -5268,6 +5269,247 @@
     "IP": "162.216.149.59",
     "Country": "United States",
     "CountryCode": "US",
+    "Score": 10,
+    "Score_breakdown": {
+      "errors": 6,
+      "ua": 4
+    },
+    "Requests": 1,
+    "401": 0,
+    "403": 0,
+    "404": 1,
+    "UA_sample": "-",
+    "Critical_paths": ""
+  },
+  {
+    "IP": "104.152.52.65",
+    "Country": "United States",
+    "CountryCode": "US",
+    "Score": 10,
+    "Score_breakdown": {
+      "errors": 6,
+      "ua": 4
+    },
+    "Requests": 1,
+    "401": 0,
+    "403": 1,
+    "404": 0,
+    "UA_sample": "-",
+    "Critical_paths": ""
+  },
+  {
+    "IP": "165.232.78.61",
+    "Country": "Germany",
+    "CountryCode": "DE",
+    "Score": 10,
+    "Score_breakdown": {
+      "errors": 6,
+      "ua": 4
+    },
+    "Requests": 8,
+    "401": 0,
+    "403": 0,
+    "404": 8,
+    "UA_sample": "-",
+    "Critical_paths": ""
+  },
+  {
+    "IP": "161.35.200.223",
+    "Country": "Germany",
+    "CountryCode": "DE",
+    "Score": 10,
+    "Score_breakdown": {
+      "errors": 6,
+      "ua": 4
+    },
+    "Requests": 1,
+    "401": 0,
+    "403": 0,
+    "404": 1,
+    "UA_sample": "-",
+    "Critical_paths": ""
+  },
+  {
+    "IP": "104.248.131.100",
+    "Country": "Germany",
+    "CountryCode": "DE",
+    "Score": 15,
+    "Score_breakdown": {
+      "errors": 6,
+      "sensitive": 5,
+      "ua": 4
+    },
+    "Requests": 2,
+    "401": 0,
+    "403": 0,
+    "404": 2,
+    "UA_sample": "-",
+    "Critical_paths": ""
+  },
+  {
+    "IP": "164.90.223.131",
+    "Country": "Germany",
+    "CountryCode": "DE",
+    "Score": 10,
+    "Score_breakdown": {
+      "errors": 6,
+      "ua": 4
+    },
+    "Requests": 1,
+    "401": 0,
+    "403": 0,
+    "404": 1,
+    "UA_sample": "-",
+    "Critical_paths": ""
+  },
+  {
+    "IP": "157.245.61.43",
+    "Country": "Singapore",
+    "CountryCode": "SG",
+    "Score": 10,
+    "Score_breakdown": {
+      "errors": 6,
+      "ua": 4
+    },
+    "Requests": 1,
+    "401": 0,
+    "403": 0,
+    "404": 1,
+    "UA_sample": "-",
+    "Critical_paths": ""
+  },
+  {
+    "IP": "122.16.177.217",
+    "Country": "Japan",
+    "CountryCode": "JP",
+    "Score": 10,
+    "Score_breakdown": {
+      "errors": 6,
+      "ua": 4
+    },
+    "Requests": 1,
+    "401": 0,
+    "403": 0,
+    "404": 1,
+    "UA_sample": "-",
+    "Critical_paths": ""
+  },
+  {
+    "IP": "62.199.174.136",
+    "Country": "Denmark",
+    "CountryCode": "DK",
+    "Score": 10,
+    "Score_breakdown": {
+      "errors": 6,
+      "ua": 4
+    },
+    "Requests": 1,
+    "401": 0,
+    "403": 0,
+    "404": 1,
+    "UA_sample": "-",
+    "Critical_paths": ""
+  },
+  {
+    "IP": "41.37.27.168",
+    "Country": "Egypt",
+    "CountryCode": "EG",
+    "Score": 10,
+    "Score_breakdown": {
+      "errors": 6,
+      "ua": 4
+    },
+    "Requests": 1,
+    "401": 0,
+    "403": 0,
+    "404": 1,
+    "UA_sample": "-",
+    "Critical_paths": ""
+  },
+  {
+    "IP": "35.216.250.153",
+    "Country": "Switzerland",
+    "CountryCode": "CH",
+    "Score": 10,
+    "Score_breakdown": {
+      "errors": 6,
+      "ua": 4
+    },
+    "Requests": 1,
+    "401": 0,
+    "403": 0,
+    "404": 1,
+    "UA_sample": "-",
+    "Critical_paths": ""
+  },
+  {
+    "IP": "20.171.28.232",
+    "Country": "United States",
+    "CountryCode": "US",
+    "Score": 10,
+    "Score_breakdown": {
+      "errors": 6,
+      "ua": 4
+    },
+    "Requests": 1,
+    "401": 0,
+    "403": 0,
+    "404": 1,
+    "UA_sample": "-",
+    "Critical_paths": ""
+  },
+  {
+    "IP": "45.155.41.223",
+    "Country": "Luxembourg",
+    "CountryCode": "LU",
+    "Score": 10,
+    "Score_breakdown": {
+      "errors": 6,
+      "ua": 4
+    },
+    "Requests": 1,
+    "401": 0,
+    "403": 1,
+    "404": 0,
+    "UA_sample": "-",
+    "Critical_paths": ""
+  },
+  {
+    "IP": "47.237.115.229",
+    "Country": "Singapore",
+    "CountryCode": "SG",
+    "Score": 10,
+    "Score_breakdown": {
+      "errors": 6,
+      "ua": 4
+    },
+    "Requests": 2,
+    "401": 0,
+    "403": 0,
+    "404": 2,
+    "UA_sample": "-",
+    "Critical_paths": ""
+  },
+  {
+    "IP": "123.160.223.73",
+    "Country": "China",
+    "CountryCode": "CN",
+    "Score": 10,
+    "Score_breakdown": {
+      "errors": 6,
+      "ua": 4
+    },
+    "Requests": 1,
+    "401": 0,
+    "403": 0,
+    "404": 1,
+    "UA_sample": "-",
+    "Critical_paths": ""
+  },
+  {
+    "IP": "123.160.223.72",
+    "Country": "China",
+    "CountryCode": "CN",
     "Score": 10,
     "Score_breakdown": {
       "errors": 6,
