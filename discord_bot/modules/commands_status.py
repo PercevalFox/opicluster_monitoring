@@ -1,7 +1,10 @@
 import os
+import time
 import requests
+from discord.ext import commands
 
 def register(bot):
+    # Commande !status : Affiche le statut détaillé du cluster
     @bot.command()
     async def status(ctx):
         """Affiche le statut détaillé du cluster"""
@@ -26,11 +29,12 @@ def register(bot):
             disk_low = [f"{name} ({space})" for name, space in disks if space and space.endswith("Go") and float(space.split()[0]) < 2.0]
 
             msg = f"""📊 **Statut du Cluster**
-                🟢 Nœuds UP : {up}/{total}
-                🌡️ Température : max {temp_max}°C | min {temp_min}°C
-                ⚡ Charge moyenne : {avg_load} | Max : {load_peak[0]} ({load_peak[1]})
-                💾 Disques faibles :\n- """ + ("\n- ".join(disk_low) if disk_low else "Aucun")
+            🟢 Nœuds UP : {up}/{total}
+            🌡️ Température : max {temp_max}°C | min {temp_min}°C
+            ⚡ Charge moyenne : {avg_load} | Max : {load_peak[0]} ({load_peak[1]})
+            💾 Disques faibles :\n- """ + ("\n- ".join(disk_low) if disk_low else "Aucun")
 
             await ctx.send(msg)
         except Exception as e:
             await ctx.send(f"❌ Erreur API: {e}")
+

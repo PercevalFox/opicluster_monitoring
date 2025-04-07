@@ -2,21 +2,27 @@ from apscheduler.schedulers.asyncio import AsyncIOScheduler
 import os
 import requests
 import datetime
+import asyncio
 
-def init_scheduler(bot):
+# Initialisation du scheduler
+async def init_scheduler(bot):
     scheduler = AsyncIOScheduler()
 
+    # Lancer la tâche cron tous les jours à 8h du matin
     @scheduler.scheduled_job("cron", hour=8, minute=0)
     async def daily_report():
         await send_report(bot)
 
+    # Commande manuelle pour afficher le rapport
     @bot.command()
     async def daily(ctx):
         """Affiche manuellement le rapport du cluster"""
         await send_report(bot, ctx.channel)
 
+    # Lancer le scheduler avec la boucle d'événements du bot
     scheduler.start()
 
+# Fonction pour envoyer le rapport
 async def send_report(bot, channel=None):
     channel_id = int(os.getenv("DISCORD_CHANNEL_ID", "0"))
     if not channel:
