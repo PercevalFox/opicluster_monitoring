@@ -1,0 +1,45 @@
+[*] Analyse de discord_bot
+
+Report Summary
+
+┌──────────────────┬──────┬─────────────────┐
+│      Target      │ Type │ Vulnerabilities │
+├──────────────────┼──────┼─────────────────┤
+│ requirements.txt │ pip  │        0        │
+└──────────────────┴──────┴─────────────────┘
+Legend:
+- '-': Not scanned
+- '0': Clean (no security findings detected)
+
+
+
+[*] Analyse de web_app
+
+Report Summary
+
+┌────────┬──────┬─────────────────┐
+│ Target │ Type │ Vulnerabilities │
+├────────┼──────┼─────────────────┤
+│   -    │  -   │        -        │
+└────────┴──────┴─────────────────┘
+Legend:
+- '-': Not scanned
+- '0': Clean (no security findings detected)
+
+
+
+[*] Analyse de ip_defender
+
+Report Summary
+
+┌────────┬──────┬─────────────────┐
+│ Target │ Type │ Vulnerabilities │
+├────────┼──────┼─────────────────┤
+│   -    │  -   │        -        │
+└────────┴──────┴─────────────────┘
+Legend:
+- '-': Not scanned
+- '0': Clean (no security findings detected)
+
+
+

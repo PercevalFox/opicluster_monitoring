@@ -156,7 +156,7 @@ def sms_alert():
 def get_node_metrics():
     query = 'up{job="node"}'
     try:
-        r = requests.get(PROMETHEUS_URL, params={'query': query})
+        r = requests.get(PROMETHEUS_URL, params={'query': query}, timeout=2)
         results = r.json()['data']['result']
         metrics = {}
         for result in results:
@@ -174,7 +174,7 @@ def get_temperatures():
     query = 'node_thermal_zone_temp{type="cpu-thermal"}'
     temps = {}
     try:
-        r = requests.get(PROMETHEUS_URL, params={'query': query})
+        r = requests.get(PROMETHEUS_URL, params={'query': query}, timeout=2)
         results = r.json()['data']['result']
         for result in results:
             instance = result['metric'].get('instance', 'unknown')
@@ -194,7 +194,7 @@ def get_load_5m():
     query = 'node_load5'
     loads = {}
     try:
-        r = requests.get(PROMETHEUS_URL, params={'query': query})
+        r = requests.get(PROMETHEUS_URL, params={'query': query}, timeout=2)
         results = r.json()['data']['result']
         for result in results:
             instance = result['metric'].get('instance', 'unknown')
@@ -208,7 +208,7 @@ def get_filesystem():
     query = 'node_filesystem_avail_bytes{mountpoint="/"}'
     fs = {}
     try:
-        r = requests.get(PROMETHEUS_URL, params={'query': query})
+        r = requests.get(PROMETHEUS_URL, params={'query': query}, timeout=2)
         results = r.json()['data']['result']
         for result in results:
             instance = result['metric'].get('instance', 'unknown')
@@ -223,7 +223,7 @@ def get_tcp_estab():
     query = 'node_netstat_Tcp_CurrEstab'
     tcp = {}
     try:
-        r = requests.get(PROMETHEUS_URL, params={'query': query})
+        r = requests.get(PROMETHEUS_URL, params={'query': query}, timeout=2)
         results = r.json()['data']['result']
         for result in results:
             instance = result['metric'].get('instance', 'unknown')
@@ -292,7 +292,7 @@ def get_cluster_data():
 
 def get_alerts():
     try:
-        r = requests.get(ALERTMANAGER_URL)
+        r = requests.get(ALERTMANAGER_URL, timeout=2)
         return r.json()
     except Exception as e:
         print("Erreur get_alerts:", e)

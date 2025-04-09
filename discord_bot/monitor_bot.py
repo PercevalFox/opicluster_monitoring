@@ -44,7 +44,7 @@ def send_discord_notification(message):
         "username": "Bot Monitoring",
     }
     try:
-        response = requests.post(WEBHOOK_URL, json=payload)  # Utiliser l'URL sans l'encodage
+        response = requests.post(WEBHOOK_URL, json=payload, timeout=2)  # Utiliser l'URL sans l'encodage
         response.raise_for_status()  # Vérifie si la requête a réussi
         print("Notification envoyée à Discord")
     except requests.exceptions.RequestException as e:

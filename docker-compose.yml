@@ -30,8 +30,8 @@ services:
     depends_on:
       - socket-proxy
     command:
-      - "--api.dashboard=true"
-      - "--api.insecure=true"
+      - "--api.dashboard=false"
+      - "--api.insecure=false"
       - "--entryPoints.web.address=:80"
       - "--entryPoints.websecure.address=:443"
       - "--providers.docker=true"
@@ -112,6 +112,7 @@ services:
       - "traefik.http.routers.web_app_static.tls=true"
       - "traefik.http.routers.web_app_static.tls.certresolver=myresolver"
       - "traefik.http.routers.web_app_static.service=web_app_main"
+      - "traefik.http.routers.web_app_static.middlewares=error-pages@file,geoblock-france@file,traefik-auth@file"
 
       # API - SMS Alert
       - "traefik.http.routers.sms_alert_api.rule=Host(`monitoring.opicluster.online`) && PathPrefix(`/sms_alert`)"
@@ -177,8 +178,6 @@ services:
   alertmanager:
     image: prom/alertmanager:latest
     container_name: alertmanager
-    volumes:
-      - ./alertmanager/alertmanager.yml:/etc/alertmanager/alertmanager.yml
     networks:
       - traefik_proxy
     labels:
