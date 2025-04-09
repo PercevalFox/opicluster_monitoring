@@ -30,8 +30,8 @@ services:
     depends_on:
       - socket-proxy
     command:
-      - "--api.dashboard=false"
-      - "--api.insecure=false"
+      - "--api.dashboard=true"
+      - "--api.insecure=true"
       - "--entryPoints.web.address=:80"
       - "--entryPoints.websecure.address=:443"
       - "--providers.docker=true"
@@ -234,6 +234,8 @@ services:
     read_only: true
     tmpfs:
       - /tmp
+    volumes:
+      - /home/foxink/opicluster_monitoring/data:/data
     security_opt:
       - no-new-privileges:true
       - seccomp=./seccomp/my_seccomp.json
@@ -244,6 +246,7 @@ services:
       interval: 30s
       timeout: 5s
       retries: 3
+  
   ip_defender:
     build: ./ip_defender
     container_name: ip_defender
