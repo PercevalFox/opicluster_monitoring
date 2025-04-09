@@ -1,3 +1,4 @@
+import os
 import re
 import json
 import time
@@ -8,12 +9,16 @@ ACCESS_LOG = "/logs/access.log"
 BANLIST_FILE = "/data/banlist.json"
 PROM_FILE = "/data/ip_threat.prom"
 BAN_THRESHOLD = 15
-SLEEP_INTERVAL = 3600  # secondes
+SLEEP_INTERVAL = 3600  # 1 heure
 WHITELIST = {"192.168.1.254", "45.155.41.95", "37.167.128.28"}
 
 def parse_access_log():
     scores = defaultdict(int)
     try:
+        if not os.path.exists(ACCESS_LOG):
+            print(f"[!] Fichier log introuvable : {ACCESS_LOG}")
+            return scores
+
         with open(ACCESS_LOG, "r") as f:
             for line in f:
                 match = re.search(r'(?P<ip>\d+\.\d+\.\d+\.\d+).*"(GET|POST|HEAD) (?P<url>.*?) HTTP/', line)
@@ -21,7 +26,7 @@ def parse_access_log():
                     ip = match.group("ip")
                     if ip in WHITELIST:
                         continue
-                    url = match.group("url")
+                    url = match.group("url").lower()
                     if "wp-login" in url or "admin" in url:
                         scores[ip] += 5
                     elif "/sms_alert" in url or "/api/" in url:
@@ -29,26 +34,45 @@ def parse_access_log():
                     else:
                         scores[ip] += 0.1
     except Exception as e:
-        print(f"[!] Error parsing log: {e}")
+        print(f"[ERROR] Lecture access.log: {e}")
     return scores
 
 def write_banlist(scores):
-    banned = [ip for ip, score in scores.items() if score >= BAN_THRESHOLD]
-    with open(BANLIST_FILE, "w") as f:
-        json.dump({"banned_ips": banned, "updated": datetime.utcnow().isoformat()}, f, indent=2)
+    try:
+        banned = [ip for ip, score in scores.items() if score >= BAN_THRESHOLD]
+        with open(BANLIST_FILE, "w") as f:
+            json.dump({
+                "banned_ips": banned,
+                "updated": datetime.utcnow().isoformat()
+            }, f, indent=2)
+        print(f"[+] Banlist mise à jour ({len(banned)} IPs)")
+    except Exception as e:
+        print(f"[ERROR] Écriture banlist: {e}")
 
 def write_prometheus(scores):
-    with open(PROM_FILE, "w") as f:
-        for ip, score in scores.items():
-            f.write(f'ip_threat_score{{ip="{ip}"}} {score:.2f}\n')
+    try:
+        with open(PROM_FILE, "w") as f:
+            for ip, score in scores.items():
+                f.write(f'ip_threat_score{{ip="{ip}"}} {score:.2f}\n')
+        print(f"[+] Export Prometheus écrit ({len(scores)} IPs)")
+    except Exception as e:
+        print(f"[ERROR] Écriture Prometheus: {e}")
 
 def main_loop():
+    print("[+] IP Defender en boucle active. Intervalle :", SLEEP_INTERVAL)
     while True:
-        print("[*] Scanning logs & updating banlist/prometheus export...")
-        scores = parse_access_log()
-        write_banlist(scores)
-        write_prometheus(scores)
+        try:
+            print("[*] Scan des logs & génération banlist/prometheus...")
+            scores = parse_access_log()
+            write_banlist(scores)
+            write_prometheus(scores)
+        except Exception as e:
+            print(f"[CRASH LOOP] Exception: {e}")
         time.sleep(SLEEP_INTERVAL)
 
 if __name__ == "__main__":
-    main_loop()
+    try:
+        print("[+] Démarrage de IP Defender...")
+        main_loop()
+    except Exception as e:
+        print(f"[CRITICAL] Impossible de lancer le service: {e}")
