@@ -251,10 +251,7 @@ services:
       - ./data:/data
     restart: unless-stopped
     healthcheck:
-      test: ["CMD-SHELL", "pgrep -f main.py || exit 1"]
-      interval: 30s
-      timeout: 5s
-      retries: 3
+      disable: true
 
 networks:
   traefik_proxy:
