@@ -28,5 +28,6 @@ backup/
 # === Useless === 
 ORGA.md
 
-# === Scan Bandit ===
-opicluster_monitoring/data/bandit_report_*
+# === Scan sécu ===
+data/bandit_report_*
+setup_hardening.sh

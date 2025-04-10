@@ -5,13 +5,70 @@
   <title>⛔ Accès interdit</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="robots" content="noindex, nofollow, noarchive">
-  <link rel="icon" href="/static/favicon.ico" type="image/x-icon">
-  <link href="https://fonts.googleapis.com/css2?family=Fira+Code&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/static/style.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fira+Code&display=swap">
+  
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+    body {
+      margin: 0;
+      padding: 0;
+      background: #121212;
+      color: #e0e0e0;
+      font-family: 'Fira Code', monospace;
+    }
+    header {
+      background: linear-gradient(90deg, #1a1a2e, #16213e);
+      padding: 20px;
+      text-align: center;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.5);
+    }
+    header h1 {
+      margin: 0;
+      font-size: 2.8em;
+      color: #ff5555;
+    }
+    header p {
+      margin: 5px 0 0;
+      font-size: 1.2em;
+      color: #c0c0c0;
+    }
+    .container {
+      max-width: 1200px;
+      margin: 40px auto;
+      padding: 0 20px;
+    }
+    .card {
+      background: #1e1e2f;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.4);
+      margin-bottom: 20px;
+    }
+    .card h2 {
+      margin-top: 0;
+      color: #82aaff;
+      text-align: center;
+    }
+    .card p {
+      margin: 10px 0;
+      font-size: 1.1em;
+      text-align: center;
+    }
+    footer {
+      text-align: center;
+      margin-top: 60px;
+      padding: 20px 0;
+      background: #1a1a2e;
+      color: #888;
+      font-size: 0.9em;
+    }
+  </style>
 </head>
 <body>
   <header>
-    <h1 style="color: #ff5555;">⛔ IP bloquée</h1>
+    <h1>⛔ IP bloquée</h1>
     <p>Accès refusé - comportement suspect détecté</p>
   </header>
 
