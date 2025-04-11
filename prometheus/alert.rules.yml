@@ -3,7 +3,7 @@ groups:
     rules:
       - alert: NodeDown
         expr: up{job="node"} == 0
-        for: 30s
+        for: 90s
         labels:
           severity: critical
         annotations:
