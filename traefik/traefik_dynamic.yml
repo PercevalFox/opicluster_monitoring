@@ -1,5 +1,13 @@
 http:
   middlewares:
+
+    geoblock-vault-only:
+      ipWhiteList:
+        sourceRange:
+          - "0.0.0.0/0"
+        ipStrategy:
+          depth: 1
+
     error-pages:
       errors:
         status:

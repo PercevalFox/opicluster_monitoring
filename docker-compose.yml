@@ -215,12 +215,39 @@ services:
       timeout: 5s
       retries: 3
 
+  vault-agent-discord_bot:
+    image: hashicorp/vault:1.15
+    container_name: vault-agent-discord_bot
+    restart: unless-stopped
+    depends_on:
+      - vault
+    environment:
+      - VAULT_ADDR=http://vault:8201
+    command: agent -config=/vault/agent/discord-agent.hcl
+    cap_add:
+      - IPC_LOCK
+    volumes:
+      - ./vault/agent:/vault/agent:ro
+      - ./vault/creds/discord_bot:/vault/creds/discord_bot
+      - ./vault/secrets:/vault/secrets
+    networks:
+      - traefik_proxy
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.vault.rule=Host(`vault.monitoring.opicluster.online`)"
+      - "traefik.http.routers.vault.entryPoints=websecure"
+      - "traefik.http.routers.vault.tls.certresolver=myresolver"
+      - "traefik.http.routers.vault.middlewares=geoblock-vault-only@file,traefik-auth@file"
+      - "traefik.http.services.vault.loadbalancer.server.port=8201"
+
   discord_bot:
     build: ./discord_bot
     container_name: discord_bot
     env_file:
-      - .env.bot
+      - ./vault/secrets/discord_bot.env
     restart: unless-stopped
+    depends_on:
+      - vault-agent-discord_bot
     networks:
       - traefik_proxy
     labels:
@@ -252,6 +279,30 @@ services:
     restart: unless-stopped
     healthcheck:
       disable: true
+
+  vault:
+    image: hashicorp/vault:1.15
+    container_name: vault
+    restart: unless-stopped
+    cap_add:
+      - IPC_LOCK
+    environment:
+      VAULT_API_ADDR: http://vault:8201
+    ports:
+      - "8201:8201"
+    volumes:
+      - ./vault/data:/vault/data
+      - ./vault/config:/vault/config
+    networks:
+      - traefik_proxy
+    command: vault server -config=/vault/config/config.hcl
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.vault.rule=Host(`vault.monitoring.opicluster.online`)"
+      - "traefik.http.routers.vault.entryPoints=websecure"
+      - "traefik.http.routers.vault.tls.certresolver=myresolver"
+      - "traefik.http.routers.vault.middlewares=geoblock-vault-only@file,traefik-auth@file"
+      - "traefik.http.services.vault.loadbalancer.server.port=8201"
 
 networks:
   traefik_proxy:
