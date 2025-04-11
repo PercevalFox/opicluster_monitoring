@@ -29,6 +29,7 @@ backup/
 ORGA.md
 generate_full_dump.py
 Organisation du cluster.txt
+docker-compose-vault.yml
 
 # === Scan sécu ===
 data/bandit_report_*
@@ -39,4 +40,5 @@ data/lynis_report_*
 # === Vault ===
 vault/secrets/*
 vault/creds/*
-/vault/bootstrap/*
+vault/bootstrap/*
+vault/data

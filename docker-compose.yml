@@ -66,6 +66,31 @@ services:
       - "traefik.http.routers.traefik-dashboard.tls.certresolver=myresolver"
       - "traefik.http.routers.traefik-dashboard.middlewares=traefik-auth@file"
 
+  vault-agent-web_app:
+    image: hashicorp/vault:1.15
+    container_name: vault-agent-web_app
+    restart: unless-stopped
+    depends_on:
+      - vault
+    environment:
+      - VAULT_ADDR=http://vault:8201
+    command: agent -config=/vault/agent/web_app.hcl
+    cap_add:
+      - IPC_LOCK
+    volumes:
+      - ./vault/agent:/vault/agent:ro
+      - ./vault/creds/web_app:/vault/creds/web_app
+      - ./vault/secrets:/vault/secrets
+    networks:
+      - traefik_proxy
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.web_app-agent.rule=Host(`vault.monitoring.opicluster.online`) && PathPrefix(`/webapp-agent`)"
+      - "traefik.http.routers.web_app-agent.entryPoints=websecure"
+      - "traefik.http.routers.web_app-agent.tls.certresolver=myresolver"
+      - "traefik.http.routers.web_app-agent.middlewares=traefik-auth@file"
+      - "traefik.http.services.web_app-agent.loadbalancer.server.port=8201"
+
   web_app:
     build: ./web_app
     container_name: web_app
@@ -78,7 +103,7 @@ services:
     tmpfs:
       - /tmp
     env_file:
-      - .env.secrets
+      - ./vault/secrets/web_app.env
     networks:
       - traefik_proxy
     labels:
@@ -189,11 +214,37 @@ services:
       timeout: 5s
       retries: 3
 
+  vault-agent-grafana:
+    image: hashicorp/vault:1.15
+    container_name: vault-agent-grafana
+    restart: unless-stopped
+    depends_on:
+      - vault
+    environment:
+      - VAULT_ADDR=http://vault:8201
+    command: agent -config=/vault/agent/grafana.hcl
+    cap_add:
+      - IPC_LOCK
+    volumes:
+      - ./vault/agent:/vault/agent:ro
+      - ./vault/creds/grafana:/vault/creds/grafana
+      - ./vault/secrets:/vault/secrets
+    networks:
+      - traefik_proxy
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.grafana-agent.rule=Host(`vault.monitoring.opicluster.online`) && PathPrefix(`/grafana-agent`)"
+      - "traefik.http.routers.grafana-agent.entryPoints=websecure"
+      - "traefik.http.routers.grafana-agent.tls.certresolver=myresolver"
+      - "traefik.http.routers.grafana-agent.middlewares=traefik-auth@file"
+      - "traefik.http.services.grafana-agent.loadbalancer.server.port=8201"
+
+
   grafana:
     image: grafana/grafana:latest
     container_name: grafana
     env_file:
-      - .env.secrets
+      - ./vault/secrets/grafana.env
     environment:
       - GF_PATHS_CONFIG=/etc/grafana/grafana.ini
     volumes:
