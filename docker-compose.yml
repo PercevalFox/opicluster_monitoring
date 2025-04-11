@@ -239,7 +239,6 @@ services:
       - "traefik.http.routers.grafana-agent.middlewares=traefik-auth@file"
       - "traefik.http.services.grafana-agent.loadbalancer.server.port=8201"
 
-
   grafana:
     image: grafana/grafana:latest
     container_name: grafana

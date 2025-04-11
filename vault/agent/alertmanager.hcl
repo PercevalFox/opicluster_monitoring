@@ -19,9 +19,9 @@ auto_auth {
 template {
   destination = "/vault/secrets/web_app.env"
   contents = <<EOT
-SMTP_USER={{ with secret "secret/web_app/config" }}{{ .Data.data.SMTP_USER }}{{ end }}
-SMTP_PASS={{ with secret "secret/web_app/config" }}{{ .Data.data.SMTP_PASS }}{{ end }}
-FREE_USER={{ with secret "secret/web_app/config" }}{{ .Data.data.FREE_USER }}{{ end }}
-FREE_PASS={{ with secret "secret/web_app/config" }}{{ .Data.data.FREE_PASS }}{{ end }}
+SMTP_USER="{{ with secret "secret/web_app/config" }}{{ .Data.data.SMTP_USER }}{{ end }}"
+SMTP_PASS="{{ with secret "secret/web_app/config" }}{{ .Data.data.SMTP_PASS }}{{ end }}"
+FREE_USER="{{ with secret "secret/web_app/config" }}{{ .Data.data.FREE_USER }}{{ end }}"
+FREE_PASS="{{ with secret "secret/web_app/config" }}{{ .Data.data.FREE_PASS }}{{ end }}"
 EOT
 }
