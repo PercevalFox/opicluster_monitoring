@@ -4,7 +4,7 @@ import subprocess
 from dotenv import load_dotenv
 
 # Charger les variables d'environnement depuis le fichier .env.bot
-load_dotenv(dotenv_path='/home/foxink/opicluster_monitoring/.env.bot')
+load_dotenv(dotenv_path='/home/foxink/opicluster_monitoring/vault/secrets/discord_bot.env')
 
 # Récupérer le webhook à partir des variables d'environnement
 WEBHOOK_URL = os.getenv("WEBHOOK_GENERAL")

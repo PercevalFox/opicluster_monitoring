@@ -4,6 +4,7 @@
 .env.bot
 alertmanager/alertmanager.yml
 traefik/secrets/traefik_auth.htpasswd
+grafana_to_discord/.env
 
 # === Données persistantes ===
 grafana-data/
@@ -29,7 +30,7 @@ backup/
 ORGA.md
 generate_full_dump.py
 Organisation du cluster.txt
-docker-compose-vault.yml
+grafana_to_discord/.last_message_id
 
 # === Scan sécu ===
 data/bandit_report_*

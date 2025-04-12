@@ -246,6 +246,9 @@ services:
       - ./vault/secrets/grafana.env
     environment:
       - GF_PATHS_CONFIG=/etc/grafana/grafana.ini
+      - GF_AUTH_ANONYMOUS_ENABLED=true
+      - GF_AUTH_ANONYMOUS_ORG_ROLE=Viewer
+      - GF_AUTH_DISABLE_LOGIN_FORM=true
     volumes:
       - ./grafana-data:/var/lib/grafana
       - ./grafana/grafana.ini:/etc/grafana/grafana.ini
@@ -257,7 +260,7 @@ services:
       - "traefik.http.routers.grafana.entryPoints=websecure"
       - "traefik.http.routers.grafana.tls=true"
       - "traefik.http.routers.grafana.tls.certresolver=myresolver"
-      - "traefik.http.routers.grafana.middlewares=geoblock-france@file,traefik-auth@file"
+      - "traefik.http.routers.grafana.middlewares=geoblock-france@file"
       - "traefik.http.services.grafana.loadbalancer.server.port=3000"
     healthcheck:
       test: ["CMD", "wget", "--spider", "-q", "http://localhost:3000/api/health"]

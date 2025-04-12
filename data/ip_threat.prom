@@ -869,3 +869,6 @@ ip_threat_score{ip="176.53.217.94"} 10.00
 ip_threat_score{ip="196.251.88.108"} 15.00
 ip_threat_score{ip="66.240.219.146"} 10.00
 ip_threat_score{ip="205.210.31.146"} 10.00
+ip_threat_score{ip="65.49.1.62"} 10.00
+ip_threat_score{ip="65.49.1.65"} 10.00
+ip_threat_score{ip="65.49.1.63"} 10.00

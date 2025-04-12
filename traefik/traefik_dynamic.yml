@@ -73,6 +73,15 @@ http:
         servers:
           - url: "http://web_app:5000"
 
+  routers:
+    grafana_public:
+      rule: "Host(`grafana.monitoring.opicluster.online`) && PathPrefix(`/d/`, `/goto/`)"
+      entryPoints: websecure
+      service: grafana
+      tls:
+        certResolver: myresolver
+      middlewares: geoblock-france@file
+
 tls:
   options:
     default:
