@@ -10,6 +10,14 @@ route:
   group_interval: 5m
   repeat_interval: 1h
   receiver: 'default'
+  routes:
+    - match:
+        alert_type: 'ip_threat'
+      receiver: 'ip_threats_discord'
+      group_by: ['alertname']
+      repeat_interval: 12h
+      group_wait: 30s
+      group_interval: 20m
 
 receivers:
   - name: 'default'
@@ -17,3 +25,8 @@ receivers:
       - to: '${SMTP_FROM}'
         send_resolved: true
         require_tls: true
+
+  - name: 'ip_threats_discord'
+    webhook_configs:
+      - url: '${DISCORD_IP}'
+        send_resolved: true

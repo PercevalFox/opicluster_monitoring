@@ -57,3 +57,12 @@ groups:
         annotations:
           summary: "Problème réseau sur {{ $labels.instance }}"
           description: "Le réseau sur le nœud {{ $labels.instance }} ne répond pas depuis plus d'une minute."
+      - alert: SuspiciousIPHighScore
+        expr: count(ip_threat_score > 12) > 5
+        for: 5m
+        labels:
+          severity: warning
+          alert_type: ip_threat
+        annotations:
+          summary: "Plus de 5 IPs suspectes détectées"
+          description: "{{ $value }} IPs ont un score supérieur à 12. Consulte le dashboard /ip_threats."

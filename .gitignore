@@ -43,3 +43,4 @@ vault/secrets/*
 vault/creds/*
 vault/bootstrap/*
 vault/data
+vault_snapshot.sh

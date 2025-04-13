@@ -1,0 +1,13 @@
+[Unit]
+Description=Container Watchdog Auto-Heal
+After=network.target docker.service
+Requires=docker.service
+
+[Service]
+ExecStart=/home/foxink/opicluster_monitoring/startup/check_containers.sh
+Restart=always
+RestartSec=30
+User=root
+
+[Install]
+WantedBy=multi-user.target
