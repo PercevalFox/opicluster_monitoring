@@ -9,7 +9,7 @@ BANLIST_FILE = "/data/banlist.json"
 PROM_FILE = "/data/ip_threat.prom"
 BAN_THRESHOLD = 15
 SLEEP_INTERVAL = 3600  # secondes
-WHITELIST = {"192.168.1.254", "45.155.41.95", "37.167.128.28"}
+WHITELIST = {"192.168.1.254", "45.155.41.95", "37.167.128.28", "127.0.0.1"}
 
 def parse_access_log():
     scores = defaultdict(int)
@@ -32,8 +32,18 @@ def parse_access_log():
         print(f"[!] Error parsing log: {e}")
     return scores
 
+def is_protected_ip(ip):
+    return (
+        ip.startswith("127.0.") or
+        ip.startswith("192.168.") or
+        ip.startswith("172.")
+    )
+
 def write_banlist(scores):
-    banned = [ip for ip, score in scores.items() if score >= BAN_THRESHOLD]
+    banned = [
+        ip for ip, score in scores.items()
+        if score >= BAN_THRESHOLD and not is_protected_ip(ip) and ip not in WHITELIST
+    ]
     with open(BANLIST_FILE, "w") as f:
         json.dump({"banned_ips": banned, "updated": datetime.utcnow().isoformat()}, f, indent=2)
 

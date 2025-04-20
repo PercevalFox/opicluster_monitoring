@@ -165,6 +165,7 @@ services:
     volumes:
       - ./data:/home/foxink/opicluster_monitoring/data
       - ./data:/app/data
+      - ./data/banlist.json:/app/data/banlist.json:ro
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:5000/"]
       interval: 30s
@@ -198,6 +199,8 @@ services:
   alertmanager:
     image: prom/alertmanager:latest
     container_name: alertmanager
+    volumes:
+      - ./alertmanager/alertmanager.yml:/etc/alertmanager/alertmanager.yml:ro
     networks:
       - traefik_proxy
     labels:

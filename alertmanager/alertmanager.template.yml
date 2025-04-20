@@ -9,7 +9,8 @@ route:
   group_wait: 30s
   group_interval: 5m
   repeat_interval: 1h
-  receiver: 'default'
+  receiver: 'mail_and_sms'
+
   routes:
     - match:
         alert_type: 'ip_threat'
@@ -20,11 +21,16 @@ route:
       group_interval: 20m
 
 receivers:
-  - name: 'default'
+  - name: 'mail_and_sms'
     email_configs:
       - to: '${SMTP_FROM}'
         send_resolved: true
         require_tls: true
+    webhook_configs:
+      - url: 'http://web_app:5000/sms_alert'
+        send_resolved: true
+        http_config:
+          bearer_token: '${API_SECRET_TOKEN}'
 
   - name: 'ip_threats_discord'
     webhook_configs:

@@ -23,7 +23,7 @@ limiter = Limiter(get_remote_address, app=app, default_limits=["5 per second", "
 PROMETHEUS_URL = "http://prometheus:9090/api/v1/query"
 ALERTMANAGER_URL = "http://alertmanager:9093/api/v2/alerts"
 
-BANLIST_PATH = os.path.join(os.path.dirname(__file__), '../data/banlist.json')
+BANLIST_PATH = os.path.join(os.path.dirname(__file__), 'data/banlist.json')
 cached_banlist = {"banned_ips": []}
 banlist_last_modified = 0
 
